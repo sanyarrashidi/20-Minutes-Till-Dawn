@@ -1,8 +1,9 @@
 package com.example.dawn.controller;
 
-public class MainMenuController extends Controller {
+public class SignUpMenuController extends Controller {
     @Override
     public void handleButtons() {
-
+        
     }
+
 }
