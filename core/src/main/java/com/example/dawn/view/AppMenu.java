@@ -12,7 +12,6 @@ public abstract class AppMenu implements Screen {
     protected final Controller controller;
 
     public AppMenu(Controller controller) {
-        Gdx.input.setInputProcessor(stage);
         this.controller = controller;
     }
     
@@ -51,6 +50,8 @@ public abstract class AppMenu implements Screen {
 
     @Override
     public void dispose() {
-
+        if (stage != null) {
+            stage.dispose();
+        }
     }
 }

@@ -5,10 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAssetManager {
     private static GameAssetManager instance;
-    private final Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
+    private final Skin skin;
 
     private GameAssetManager() {
-        instance = new GameAssetManager();
+        skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
     }
 
     public static GameAssetManager getInstance() {
