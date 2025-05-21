@@ -10,8 +10,8 @@ import com.badlogic.gdx.utils.Json;
 
 public class DatabaseManager {
     private static final String PLAYERS_FILE = "players.json";
-    private final Json json;
-    private final FileHandle fileHandle;
+    private Json json;
+    private FileHandle fileHandle;
     private Map<String, Player> playersMap;
 
     public DatabaseManager() {
@@ -25,7 +25,6 @@ public class DatabaseManager {
         if (fileHandle.exists()) {
             String jsonData = fileHandle.readString();
             if (jsonData != null && !jsonData.isEmpty()) {
-                // Deserialize to an Array of Player objects first
                 Array<Player> playerArray = json.fromJson(Array.class, Player.class, jsonData);
                 playersMap = new HashMap<>();
                 if (playerArray != null) {
@@ -64,4 +63,4 @@ public class DatabaseManager {
     public boolean playerExists(String username) {
         return playersMap.containsKey(username);
     }
-} 
+}

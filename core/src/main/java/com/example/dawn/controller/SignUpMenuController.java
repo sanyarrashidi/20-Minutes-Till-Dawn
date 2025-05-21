@@ -1,9 +1,13 @@
 package com.example.dawn.controller;
 
+import com.example.dawn.Dawn;
+import com.example.dawn.enums.Regex;
+import com.example.dawn.models.App;
 import com.example.dawn.models.DatabaseManager;
+import com.example.dawn.models.GameAssetManager;
 import com.example.dawn.models.Player;
 import com.example.dawn.models.Result;
-import com.example.dawn.enums.Regex;
+import com.example.dawn.view.LoginMenu;
 
 public class SignUpMenuController extends Controller {
     private final DatabaseManager databaseManager;
@@ -31,6 +35,7 @@ public class SignUpMenuController extends Controller {
 
         Player player = new Player(username, password, securityAnswer);
         databaseManager.savePlayer(player);
+        App.getInstance().setPlayer(player);
         return new Result(true, "Player registered successfully");
     }
 
@@ -38,7 +43,7 @@ public class SignUpMenuController extends Controller {
         return new Result(true, "Guest login successful");
     }
 
-    public Result goToLogin() {
-        return new Result(true, "Going to login");
+    public void goToLogin() {
+        Dawn.getInstance().setScreen(new LoginMenu(new LoginMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
     }
 }

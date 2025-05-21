@@ -4,6 +4,10 @@ public class Player {
     private String username;
     private String password;
     private String securityAnswer;
+    private int wins = 0;
+    private int highScore = 0;
+    private int totalGames = 0;
+    private int kills = 0;
 
     public Player() {
     }
@@ -44,5 +48,49 @@ public class Player {
                 "username='''" + username + "'''" +
                 ", securityAnswer='''" + securityAnswer + "'''" +
                 '}';
+    }
+    
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public void addWin() {
+        wins++;
+    }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
+    }
+
+    public int getTotalGames() {
+        return totalGames;
+    }
+
+    public void setTotalGames(int totalGames) {
+        this.totalGames = totalGames;
+    }
+
+    public void addTotalGames() {
+        totalGames++;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
+
+    public void addKills(int amount) {
+        this.kills += amount;
     }
 } 

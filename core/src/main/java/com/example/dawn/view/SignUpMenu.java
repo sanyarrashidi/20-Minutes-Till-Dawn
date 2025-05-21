@@ -1,6 +1,7 @@
 package com.example.dawn.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.dawn.controller.SignUpMenuController;
 import com.example.dawn.models.Result;
+
+
 public class SignUpMenu extends AppMenu {
     private final TextButton registerButton;
     private final TextButton guestButton;
@@ -44,6 +47,8 @@ public class SignUpMenu extends AppMenu {
         this.securityQuestionField = new TextField("", skin);
         this.securityQuestionField.setMessageText("What is your favorite football team?");
         this.table = new Table();
+        
+        this.errorMessage.setColor(Color.RED);
     }
 
     @Override
@@ -82,9 +87,18 @@ public class SignUpMenu extends AppMenu {
                 Result result = ((SignUpMenuController) controller).register(usernameField.getText(), passwordField.getText(), passwordConfirmField.getText(), securityQuestionField.getText());
                 if (!result.isSuccessful()) {
                     errorMessage.setText(result.toString());
+
+                    usernameField.setText("");
+                    passwordField.setText("");
+                    passwordConfirmField.setText("");
+                    securityQuestionField.setText("");
+                    usernameField.setMessageText("Your username");
+                    passwordField.setMessageText("Your password");
+                    passwordConfirmField.setMessageText("Confirm your password");
+                    securityQuestionField.setMessageText("What is your favorite football team?");
                 }
                 else {
-                    errorMessage.setText("Login successful");
+                    errorMessage.setText("Login successful"); // go to main menu
                 }
             }
         });
@@ -92,7 +106,7 @@ public class SignUpMenu extends AppMenu {
         guestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((SignUpMenuController) controller).guestLogin();
+                ((SignUpMenuController) controller).guestLogin(); // go to pregame
             }
         });
 
@@ -134,7 +148,6 @@ public class SignUpMenu extends AppMenu {
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
         stage.dispose();
     }
 }
