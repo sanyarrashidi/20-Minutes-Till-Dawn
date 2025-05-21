@@ -8,6 +8,4 @@ public abstract class Controller {
     public void setView(AppMenu view) {
         this.view = view;
     }
-
-    public abstract void handleButtons();
 }

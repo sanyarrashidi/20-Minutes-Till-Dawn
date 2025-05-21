@@ -85,7 +85,7 @@ www-test/
 .loadpath
 .externalToolBuilders/
 *.launch
-
+players.json
 
 ## NetBeans:
 

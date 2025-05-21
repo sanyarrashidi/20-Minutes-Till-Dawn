@@ -25,7 +25,6 @@ public abstract class AppMenu implements Screen {
         Dawn.getBatch().end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
-        controller.handleButtons();
     }
 
     @Override
