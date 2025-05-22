@@ -42,4 +42,8 @@ public class Dawn extends Game {
     public static Dawn getInstance() {
         return dawn;
     }
+
+    public static DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
 }

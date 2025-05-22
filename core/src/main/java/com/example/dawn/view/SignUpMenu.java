@@ -98,7 +98,7 @@ public class SignUpMenu extends AppMenu {
                     securityQuestionField.setMessageText("What is your favorite football team?");
                 }
                 else {
-                    errorMessage.setText("Login successful"); // go to main menu
+                    ((SignUpMenuController) controller).goToMainMenu();
                 }
             }
         });

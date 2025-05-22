@@ -91,7 +91,7 @@ public class LoginMenu extends AppMenu {
                     passwordField.setMessageText("Your password");
                 }
                 else {
-                    errorMessage.setText("Login successful");
+                    ((LoginMenuController) controller).goToMainMenu();
                 }
             }
         });
@@ -154,7 +154,7 @@ public class LoginMenu extends AppMenu {
                     passwordConfirmField.setMessageText("Confirm your password");
                 }
                 else {
-                    errorMessage.setText("Password reset successful");
+                    ((LoginMenuController) controller).goToMainMenu();
                 }
             }
         });

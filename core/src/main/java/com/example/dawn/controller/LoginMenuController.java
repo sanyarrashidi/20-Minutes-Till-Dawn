@@ -7,6 +7,7 @@ import com.example.dawn.models.DatabaseManager;
 import com.example.dawn.models.GameAssetManager;
 import com.example.dawn.models.Player;
 import com.example.dawn.models.Result;
+import com.example.dawn.view.MainMenu;
 import com.example.dawn.view.SignUpMenu;
 
 
@@ -65,5 +66,9 @@ public class LoginMenuController extends Controller {
         player.setPassword(password);
         databaseManager.savePlayer(player);
         return new Result(true, "Password reset successful");
+    }
+
+    public void goToMainMenu() {
+        Dawn.getInstance().setScreen(new MainMenu(new MainMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
     }
 }

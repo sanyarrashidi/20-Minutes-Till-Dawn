@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Katana",
+    "imagePath": "avatars/Katana_portrait.png",
+    "hp": 4,
+    "unlockCost": 3150,
+    "description": "After reloading, summon a Magic Sword that deals 22 damage and lasts 5 seconds."
+  },
+  {
+    "name": "Raven",
+    "imagePath": "avatars/Raven_portrait.png",
+    "hp": 3,
+    "unlockCost": -1,
+    "description": "Summons a Crow that inflicts Curse. Curse deals damage equal to 200% of your bullet damage."
+  },
+  {
+    "name": "Hastur",
+    "imagePath": "avatars/Hastur_portrait.png",
+    "hp": 4,
+    "unlockCost": -1,
+    "description": "Periodically summons a Tentacle that attacks enemies for 30 damage."
+  },
+  {
+    "name": "Dasher",
+    "imagePath": "avatars/Dasher_Portrait.png",
+    "hp": 2,
+    "unlockCost": 3150,
+    "description": "Every 10 seconds, temporarily transforms into a deer. While in deer form, she is invincible and deals 100 damage to enemies she runs over. Deer form's damage is increased by Summon damage and Move Speed."
+  },
+  {
+    "name": "Luna",
+    "imagePath": "avatars/Luna_Portrait.png",
+    "hp": 4,
+    "unlockCost": 3150,
+    "description": "When reloading, a Black Hole is created that pulls in nearby enemies."
+  },
+  {
+    "name": "Yuki",
+    "imagePath": "avatars/Yuki_Portrait.png",
+    "hp": 3,
+    "unlockCost": 3150,
+    "description": "On every 6th shot, sends out a Frost Butterfly that periodically freezes nearby enemies. If affected enemies are already frozen, they instead take damage equal to the player's bullet damage."
+  },
+  {
+    "name": "Abby",
+    "imagePath": "avatars/Abby_Portrait.png",
+    "hp": 4,
+    "unlockCost": 3150,
+    "description": "On right click, quickly shoots all remaining ammo in random directions."
+  },
+  {
+    "name": "Lilith",
+    "imagePath": "avatars/Lilith_Portrait.png",
+    "hp": 4,
+    "unlockCost": 3150,
+    "description": "Summons a spirit when enemies are killed. Spirits chase down nearby enemies and deal 8 damage."
+  },
+  {
+    "name": "Spark",
+    "imagePath": "avatars/Spark_Portrait.png",
+    "hp": 3,
+    "unlockCost": 3150,
+    "description": "Bullets have a 50% chance to call down Lightning on impact for 5 damage."
+  },
+  {
+    "name": "Hina",
+    "imagePath": "avatars/Hina_Portrait.png",
+    "hp": 3,
+    "unlockCost": 3150,
+    "description": "On right click, summons a Shadow Clone that attacks nearby enemies. Shadow Clone deals damage equal to the player's Bullet Damage."
+  },
+  {
+    "name": "Scarlett",
+    "imagePath": "avatars/Scarlett_Portrait.png",
+    "hp": 3,
+    "unlockCost": 3150,
+    "description": "On every 3rd shot, throws out a wave of fire that burns enemies for 3 damage per second."
+  },
+  {
+    "name": "Diamond",
+    "imagePath": "avatars/Diamond_Portrait.png",
+    "hp": 7,
+    "unlockCost": 1350,
+    "description": "Has the highest starting HP of all the characters."
+  },
+  {
+    "name": "Shana",
+    "imagePath": "avatars/Shana_Portrait.png",
+    "hp": 4,
+    "unlockCost": 0,
+    "description": "Starter character. Can reroll upgrades once per level."
+  }
+] 
