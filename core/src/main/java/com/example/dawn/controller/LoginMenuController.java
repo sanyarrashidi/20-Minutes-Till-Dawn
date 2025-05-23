@@ -65,6 +65,7 @@ public class LoginMenuController extends Controller {
 
         player.setPassword(password);
         databaseManager.savePlayer(player);
+        App.getInstance().setPlayer(player);
         return new Result(true, "Password reset successful");
     }
 

@@ -6,6 +6,7 @@ public class Player {
     private String username;
     private String password;
     private String securityAnswer;
+    private String avatarPath;
     private Integer wins;
     private Integer highScore;
     private Integer totalGames;
@@ -29,6 +30,7 @@ public class Player {
         this.survivalDuration = survivalDuration;
         this.character = character;
         this.characters = characters;
+        this.avatarPath = character.getImagePath();
     }
 
     public String getUsername() {
@@ -63,11 +65,11 @@ public class Player {
                 '}';
     }
     
-    public int getWins() {
+    public Integer getWins() {
         return wins;
     }
 
-    public void setWins(int wins) {
+    public void setWins(Integer wins) {
         this.wins = wins;
     }
 
@@ -75,19 +77,19 @@ public class Player {
         wins++;
     }
 
-    public int getHighScore() {
+    public Integer getHighScore() {
         return highScore;
     }
 
-    public void setHighScore(int highScore) {
+    public void setHighScore(Integer highScore) {
         this.highScore = highScore;
     }
 
-    public int getTotalGames() {
+    public Integer getTotalGames() {
         return totalGames;
     }
 
-    public void setTotalGames(int totalGames) {
+    public void setTotalGames(Integer totalGames) {
         this.totalGames = totalGames;
     }
 
@@ -95,27 +97,27 @@ public class Player {
         totalGames++;
     }
 
-    public int getKills() {
+    public Integer getKills() {
         return kills;
     }
 
-    public void setKills(int kills) {
+    public void setKills(Integer kills) {
         this.kills = kills;
     }
 
-    public void addKills(int amount) {
+    public void addKills(Integer amount) {
         this.kills += amount;
     }
 
-    public int getSurvivalDuration() {
+    public Integer getSurvivalDuration() {
         return survivalDuration;
     }
 
-    public void setSurvivalDuration(int survivalDuration) {
+    public void setSurvivalDuration(Integer survivalDuration) {
         this.survivalDuration = survivalDuration;
     }
 
-    public void addSurvivalDuration(int amount) {
+    public void addSurvivalDuration(Integer amount) {
         this.survivalDuration += amount;
     }
 
@@ -133,5 +135,13 @@ public class Player {
 
     public void setCharacters(ArrayList<Character> characters) {
         this.characters = characters;
+    }
+
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
     }
 } 

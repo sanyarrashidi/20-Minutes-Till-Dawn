@@ -113,7 +113,7 @@ public class MainMenu extends AppMenu {
         profileButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // go to profile menu
+                ((MainMenuController) controller).goToProfile();
             }
         });
 

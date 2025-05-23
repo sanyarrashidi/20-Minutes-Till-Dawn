@@ -77,6 +77,11 @@ public class DatabaseManager {
         return new ArrayList<>(playersMap.values());
     }
 
+    public void deletePlayer(String username) {
+        playersMap.remove(username);
+        saveAllPlayers();
+    }
+
     private void loadCharacters() {
         fileHandle = Gdx.files.internal(CHARACTERS_FILE);
         if (fileHandle.exists()) {
