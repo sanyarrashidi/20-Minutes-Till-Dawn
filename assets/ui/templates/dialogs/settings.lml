@@ -11,6 +11,25 @@
         growX="true" />
       <checkBox onChange="toggleMusic" checked="$musicOn">@toggleMusic
       </checkBox>
+      <!-- Enhanced music track selection -->
+      <table defaultPad="3" defaultGrowX="true">
+        <row>
+          <label>@menuMusicTrack</label>
+          <selectBox selection="$getCurrentMenuMusic" onChange="setMenuMusic">
+            <:each track="$getMenuMusicTracks">
+              <option>{track}</option>
+            </:each>
+          </selectBox>
+        </row>
+        <row>
+          <label>@gameMusicTrack</label>
+          <selectBox selection="$getCurrentGameMusic" onChange="setGameMusic">
+            <:each track="$getGameMusicTracks">
+              <option>{track}</option>
+            </:each>
+          </selectBox>
+        </row>
+      </table>
     </:setting>
     <:setting name="@sound">
       @soundVolume

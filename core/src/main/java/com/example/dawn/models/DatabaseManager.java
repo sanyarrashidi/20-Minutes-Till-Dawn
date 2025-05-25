@@ -12,16 +12,19 @@ import com.badlogic.gdx.utils.Json;
 public class DatabaseManager {
     private static final String PLAYERS_FILE = "players.json";
     private static final String CHARACTERS_FILE = "characters.json";
+    private static final String WEAPONS_FILE = "weapons.json";
     private Json json;
     private FileHandle fileHandle;
     private Map<String, Player> playersMap;
     private Map<String, Character> charactersMap;
+    private Map<String, Weapon> weaponsMap;
 
     public DatabaseManager() {
         json = new Json();
         fileHandle = Gdx.files.local(PLAYERS_FILE);
         loadPlayers();
         loadCharacters();
+        loadWeapons();
     }
 
     @SuppressWarnings("unchecked")
@@ -54,9 +57,7 @@ public class DatabaseManager {
     }
 
     private void saveAllPlayers() {
-        // Ensure fileHandle points to the local players.json for writing
         this.fileHandle = Gdx.files.local(PLAYERS_FILE);
-        // Convert Map values to an Array for JSON serialization
         Array<Player> playerArray = new Array<>(playersMap.values().toArray(new Player[0]));
         String jsonData = json.prettyPrint(playerArray);
         fileHandle.writeString(jsonData, false);
@@ -72,7 +73,7 @@ public class DatabaseManager {
 
     public ArrayList<Player> getPlayers() {
         if (playersMap == null) {
-            return new ArrayList<>(); // Return empty list if map is null
+            return new ArrayList<>(); 
         }
         return new ArrayList<>(playersMap.values());
     }
@@ -105,5 +106,44 @@ public class DatabaseManager {
 
     public Character getCharacter(String name) {
         return charactersMap.get(name);
+    }
+
+    public ArrayList<Character> getCharacters() {
+        if (charactersMap == null) {
+            return new ArrayList<>(); 
+        }
+        return new ArrayList<>(charactersMap.values());
+    }
+
+    private void loadWeapons() {
+        fileHandle = Gdx.files.internal(WEAPONS_FILE);
+        if (fileHandle.exists()) {
+            String jsonData = fileHandle.readString();
+            if (jsonData != null && !jsonData.isEmpty()) {
+                Array<Weapon> weaponArray = json.fromJson(Array.class, Weapon.class, jsonData);
+                weaponsMap = new HashMap<>();
+                if (weaponArray != null) {
+                    for (Weapon weapon : weaponArray) {
+                        weaponsMap.put(weapon.getName(), weapon);
+                    }
+                }
+            } else {
+                weaponsMap = new HashMap<>();
+            }
+        } else {
+            Gdx.app.error("DatabaseManager", WEAPONS_FILE + " not found!");
+            weaponsMap = new HashMap<>();
+        }
+    }
+
+    public Weapon getWeapon(String name) {
+        return weaponsMap.get(name);
+    }
+
+    public ArrayList<Weapon> getWeapons() {
+        if (weaponsMap == null) {
+            return new ArrayList<>(); 
+        }
+        return new ArrayList<>(weaponsMap.values());
     }
 }

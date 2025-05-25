@@ -14,13 +14,17 @@ import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.example.dawn.service.Box2DService;
 
 /** Renders Box2D world. */
-@View(id = "game", value = "ui/templates/game.lml", themes = "music/theme.ogg")
+@View(id = "game", value = "ui/templates/game.lml")
 public class GameController extends StandardViewShower implements ViewResizer, ViewRenderer {
     @Inject private Box2DService box2d;
+    @Inject private com.example.dawn.service.EnhancedMusicService enhancedMusicService;
     private final Box2DDebugRenderer renderer = new Box2DDebugRenderer();
 
     @Override
     public void show(final Stage stage, final Action action) {
+        // Switch to game music when entering the game
+        enhancedMusicService.switchToGameMusic();
+        
         box2d.create();
         super.show(stage, Actions.sequence(action, Actions.run(new Runnable() {
             @Override

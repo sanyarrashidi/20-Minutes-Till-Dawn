@@ -9,8 +9,8 @@ public class Character {
     private int score = 0;
     private int kills = 0;
     private int survivalDuration = 0;
+    private Weapon weapon;
     
-    // No-argument constructor for JSON deserialization
     public Character() {
     }
 
@@ -84,5 +84,13 @@ public class Character {
 
     public void setSurvivalDuration(int survivalDuration) {
         this.survivalDuration = survivalDuration;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
     }
 }

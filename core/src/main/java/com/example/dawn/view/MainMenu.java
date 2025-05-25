@@ -51,6 +51,8 @@ public class MainMenu extends AppMenu {
     public void show() {
         stage.clear();
         Gdx.input.setInputProcessor(stage);
+        
+        ((MainMenuController) controller).startMenuMusic();
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);
@@ -99,7 +101,7 @@ public class MainMenu extends AppMenu {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // go to pre game menu
+                ((MainMenuController) controller).goToPregame();
             }
         });
 
@@ -127,7 +129,7 @@ public class MainMenu extends AppMenu {
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // go to settings menu
+                ((MainMenuController) controller).goToSettings();
             }
         });
         
