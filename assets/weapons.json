@@ -13,7 +13,7 @@
     "damage": 10,
     "projectile": 4,
     "reloadTime": 1,
-    "magazineSize": 6,
+    "magazineSize": 2,
     "imagePath": "weapons/ShotgunStill.png",
     "animations": ["weapons/ShotgunReload_0.png", "weapons/ShotgunReload_1.png", "weapons/ShotgunReload_2.png"]
   },

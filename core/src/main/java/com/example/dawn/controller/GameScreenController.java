@@ -8,9 +8,11 @@ import com.example.dawn.view.MainMenu;
 public class GameScreenController extends Controller {
     
     private final DatabaseManager databaseManager;
+    private final int gameDurationMinutes;
     
-    public GameScreenController(DatabaseManager databaseManager) {
+    public GameScreenController(DatabaseManager databaseManager, int gameDurationMinutes) {
         this.databaseManager = databaseManager;
+        this.gameDurationMinutes = gameDurationMinutes;
     }
     
     public void pauseGame() {
@@ -32,5 +34,9 @@ public class GameScreenController extends Controller {
     
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+    
+    public int getGameDurationMinutes() {
+        return gameDurationMinutes;
     }
 } 

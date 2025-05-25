@@ -80,7 +80,7 @@ public class PregameMenuController extends Controller {
         databaseManager.savePlayer(App.getInstance().getPlayer());
         
         // Start the actual game with the new GameScreen
-        GameScreenController gameController = new GameScreenController(databaseManager);
+        GameScreenController gameController = new GameScreenController(databaseManager, selectedGameDuration);
         GameScreen gameScreen = new GameScreen(gameController);
         Dawn.getInstance().setScreen(gameScreen);
         
