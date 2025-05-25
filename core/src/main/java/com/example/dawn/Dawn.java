@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.example.dawn.controller.SignUpMenuController;
 import com.example.dawn.models.DatabaseManager;
 import com.example.dawn.models.GameAssetManager;
+import com.example.dawn.service.EnhancedMusicService;
+import com.example.dawn.service.PlayerControlsService;
 import com.example.dawn.view.SignUpMenu;
 
 /** This class serves only as the application scanning root. Any classes in its package (or any of the sub-packages)
@@ -15,6 +17,8 @@ public class Dawn extends Game {
     private static Dawn dawn;
     private static SpriteBatch batch;
     private static DatabaseManager databaseManager;
+    private static EnhancedMusicService enhancedMusicService;
+    private static PlayerControlsService playerControlsService;
 
 
     @Override
@@ -22,7 +26,15 @@ public class Dawn extends Game {
         dawn = this;
         batch = new SpriteBatch();
         databaseManager = new DatabaseManager();
-        dawn.setScreen(new SignUpMenu(new SignUpMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
+        
+        // Initialize the music service
+        enhancedMusicService = new EnhancedMusicService();
+        enhancedMusicService.initialize();
+        
+        // Initialize the player controls service
+        playerControlsService = new PlayerControlsService();
+        
+        dawn.setScreen(new SignUpMenu(new SignUpMenuController(databaseManager, enhancedMusicService), GameAssetManager.getInstance().getSkin()));
     }
 
     @Override
@@ -33,6 +45,9 @@ public class Dawn extends Game {
     @Override
     public void dispose() {
         batch.dispose();
+        if (enhancedMusicService != null) {
+            enhancedMusicService.dispose();
+        }
     }
 
     public static SpriteBatch getBatch() {
@@ -45,5 +60,13 @@ public class Dawn extends Game {
 
     public static DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+    
+    public static EnhancedMusicService getEnhancedMusicService() {
+        return enhancedMusicService;
+    }
+    
+    public static PlayerControlsService getPlayerControlsService() {
+        return playerControlsService;
     }
 }

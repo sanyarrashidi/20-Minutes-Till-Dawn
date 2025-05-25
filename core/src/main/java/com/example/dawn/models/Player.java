@@ -14,6 +14,17 @@ public class Player {
     private Integer survivalDuration;
     private Character character;
     private ArrayList<Character> characters;
+    private Boolean autoReload = false;
+    private Boolean blackAndWhiteScreen = false;
+
+    // Control settings
+    private Integer moveUpKey = 22; // W key (Input.Keys.W)
+    private Integer moveDownKey = 19; // S key (Input.Keys.S)
+    private Integer moveLeftKey = 29; // A key (Input.Keys.A)
+    private Integer moveRightKey = 32; // D key (Input.Keys.D)
+    private Integer reloadKey = 46; // R key (Input.Keys.R)
+    private Integer shootKey = 62; // Space key (Input.Keys.SPACE)
+    private Integer sprintKey = 59; // Left Shift key (Input.Keys.SHIFT_LEFT)
 
     // No-argument constructor for JSON deserialization
     public Player() {
@@ -143,5 +154,77 @@ public class Player {
 
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
+    }
+
+    public Boolean getAutoReload() {
+        return autoReload;
+    }
+
+    public void setAutoReload(Boolean autoReload) {
+        this.autoReload = autoReload;
+    }
+
+    public Boolean getBlackAndWhiteScreen() {
+        return blackAndWhiteScreen;
+    }
+
+    public void setBlackAndWhiteScreen(Boolean blackAndWhiteScreen) {
+        this.blackAndWhiteScreen = blackAndWhiteScreen;
+    }
+
+    public Integer getMoveUpKey() {
+        return moveUpKey;
+    }
+
+    public void setMoveUpKey(Integer moveUpKey) {
+        this.moveUpKey = moveUpKey;
+    }
+
+    public Integer getMoveDownKey() {
+        return moveDownKey;
+    }
+
+    public void setMoveDownKey(Integer moveDownKey) {
+        this.moveDownKey = moveDownKey;
+    }
+
+    public Integer getMoveLeftKey() {
+        return moveLeftKey;
+    }
+
+    public void setMoveLeftKey(Integer moveLeftKey) {
+        this.moveLeftKey = moveLeftKey;
+    }
+
+    public Integer getMoveRightKey() {
+        return moveRightKey;
+    }
+
+    public void setMoveRightKey(Integer moveRightKey) {
+        this.moveRightKey = moveRightKey;
+    }
+
+    public Integer getReloadKey() {
+        return reloadKey;
+    }
+
+    public void setReloadKey(Integer reloadKey) {
+        this.reloadKey = reloadKey;
+    }
+
+    public Integer getShootKey() {
+        return shootKey;
+    }
+
+    public void setShootKey(Integer shootKey) {
+        this.shootKey = shootKey;
+    }
+
+    public Integer getSprintKey() {
+        return sprintKey;
+    }
+
+    public void setSprintKey(Integer sprintKey) {
+        this.sprintKey = sprintKey;
     }
 } 

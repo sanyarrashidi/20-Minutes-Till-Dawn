@@ -51,8 +51,6 @@ public class MainMenu extends AppMenu {
     public void show() {
         stage.clear();
         Gdx.input.setInputProcessor(stage);
-        
-        ((MainMenuController) controller).startMenuMusic();
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);

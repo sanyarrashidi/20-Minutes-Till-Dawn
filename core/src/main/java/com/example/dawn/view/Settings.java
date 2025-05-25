@@ -11,8 +11,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.dawn.Dawn;
 import com.example.dawn.controller.SettingsController;
 import com.example.dawn.controller.MainMenuController;
+import com.example.dawn.controller.ControlsMenuController;
+import com.example.dawn.models.App;
 import com.example.dawn.models.GameAssetManager;
+import com.example.dawn.models.Player;
 import com.example.dawn.service.EnhancedMusicService;
+import com.example.dawn.view.ControlsMenu;
 
 public class Settings extends AppMenu {
     
@@ -31,6 +35,12 @@ public class Settings extends AppMenu {
     private final Label sfxVolumeLabel;
     private final Slider sfxVolumeSlider;
     private final CheckBox sfxToggleCheckBox;
+    
+    // New game settings UI components
+    private final CheckBox autoReloadCheckBox;
+    private final CheckBox blackAndWhiteCheckBox;
+    private final TextButton controlsButton;
+    
     private final TextButton backButton;
     private final Label statusLabel;
     
@@ -58,6 +68,11 @@ public class Settings extends AppMenu {
         this.sfxVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
         this.sfxToggleCheckBox = new CheckBox("SFX ON", skin);
         
+        // Initialize new game settings UI components
+        this.autoReloadCheckBox = new CheckBox("Auto Reload", skin);
+        this.blackAndWhiteCheckBox = new CheckBox("Black and White", skin);
+        this.controlsButton = new TextButton("Controls", skin);
+        
         this.backButton = new TextButton("Back", skin);
         this.statusLabel = new Label("", skin);
         this.statusLabel.setColor(Color.GREEN);
@@ -69,64 +84,87 @@ public class Settings extends AppMenu {
         Gdx.input.setInputProcessor(stage);
         
         Table mainTable = new Table(skin);
-        mainTable.setFillParent(true);
         mainTable.center();
         
         titleLabel.setFontScale(1.8f);
-        mainTable.add(titleLabel).colspan(2).center().padBottom(40);
+        mainTable.add(titleLabel).colspan(2).center().padBottom(20);
         mainTable.row();
         
         Label musicSectionLabel = new Label("Music Settings", skin);
         musicSectionLabel.setFontScale(1.4f);
-        mainTable.add(musicSectionLabel).colspan(2).center().padBottom(30);
+        mainTable.add(musicSectionLabel).colspan(2).center().padBottom(15);
         mainTable.row();
         
         musicVolumeLabel.setFontScale(1.2f);
-        mainTable.add(musicVolumeLabel).left().padRight(30).padBottom(15);
-        mainTable.add(musicVolumeSlider).width(400).height(40).left().padBottom(15);
+        mainTable.add(musicVolumeLabel).left().padRight(30).padBottom(10);
+        mainTable.add(musicVolumeSlider).width(400).height(40).left().padBottom(10);
         mainTable.row();
         
         musicToggleCheckBox.getLabel().setFontScale(1.2f);
-        mainTable.add(musicToggleCheckBox).colspan(2).center().padBottom(30);
+        mainTable.add(musicToggleCheckBox).colspan(2).center().padBottom(15);
         mainTable.row();
         
         Label trackSectionLabel = new Label("Music Tracks", skin);
         trackSectionLabel.setFontScale(1.4f);
-        mainTable.add(trackSectionLabel).colspan(2).center().padBottom(30);
+        mainTable.add(trackSectionLabel).colspan(2).center().padBottom(15);
         mainTable.row();
         
         menuMusicLabel.setFontScale(1.2f);
-        mainTable.add(menuMusicLabel).left().padRight(30).padBottom(15);
-        mainTable.add(menuMusicSelectBox).width(400).height(50).left().padBottom(15);
+        mainTable.add(menuMusicLabel).left().padRight(30).padBottom(10);
+        mainTable.add(menuMusicSelectBox).width(400).height(50).left().padBottom(10);
         mainTable.row();
         
         gameMusicLabel.setFontScale(1.2f);
-        mainTable.add(gameMusicLabel).left().padRight(30).padBottom(30);
-        mainTable.add(gameMusicSelectBox).width(400).height(50).left().padBottom(30);
+        mainTable.add(gameMusicLabel).left().padRight(30).padBottom(15);
+        mainTable.add(gameMusicSelectBox).width(400).height(50).left().padBottom(15);
         mainTable.row();
         
         Label sfxSectionLabel = new Label("Sound Effects", skin);
         sfxSectionLabel.setFontScale(1.4f);
-        mainTable.add(sfxSectionLabel).colspan(2).center().padBottom(30);
+        mainTable.add(sfxSectionLabel).colspan(2).center().padBottom(15);
         mainTable.row();
         
         sfxVolumeLabel.setFontScale(1.2f);
-        mainTable.add(sfxVolumeLabel).left().padRight(30).padBottom(15);
-        mainTable.add(sfxVolumeSlider).width(400).height(40).left().padBottom(15);
+        mainTable.add(sfxVolumeLabel).left().padRight(30).padBottom(10);
+        mainTable.add(sfxVolumeSlider).width(400).height(40).left().padBottom(10);
         mainTable.row();
         
         sfxToggleCheckBox.getLabel().setFontScale(1.2f);
-        mainTable.add(sfxToggleCheckBox).colspan(2).center().padBottom(40);
+        mainTable.add(sfxToggleCheckBox).colspan(2).center().padBottom(15);
+        mainTable.row();
+        
+        // Game Settings Section
+        Label gameSettingsLabel = new Label("Game Settings", skin);
+        gameSettingsLabel.setFontScale(1.4f);
+        mainTable.add(gameSettingsLabel).colspan(2).center().padBottom(15);
+        mainTable.row();
+        
+        autoReloadCheckBox.getLabel().setFontScale(1.2f);
+        mainTable.add(autoReloadCheckBox).colspan(2).center().padBottom(10);
+        mainTable.row();
+        
+        blackAndWhiteCheckBox.getLabel().setFontScale(1.2f);
+        mainTable.add(blackAndWhiteCheckBox).colspan(2).center().padBottom(10);
+        mainTable.row();
+        
+        // Put controls and back buttons side by side
+        controlsButton.getLabel().setFontScale(1.2f);
+        backButton.getLabel().setFontScale(1.2f);
+        mainTable.add(controlsButton).center().width(250).height(60).padRight(20).padBottom(15);
+        mainTable.add(backButton).center().width(250).height(60).padLeft(20).padBottom(15);
         mainTable.row();
 
         statusLabel.setFontScale(1.1f);
-        mainTable.add(statusLabel).colspan(2).center().padTop(20).padBottom(20);
+        mainTable.add(statusLabel).colspan(2).center().padTop(10).padBottom(15);
         mainTable.row();
         
-        backButton.getLabel().setFontScale(1.3f);
-        mainTable.add(backButton).colspan(2).center().width(300).height(80).padTop(30);
+        // Wrap in ScrollPane to ensure everything is visible
+        ScrollPane scrollPane = new ScrollPane(mainTable, skin);
+        scrollPane.setFillParent(true);
+        scrollPane.setScrollingDisabled(true, false); // Only allow vertical scrolling
+        scrollPane.setFadeScrollBars(false);
         
-        stage.addActor(mainTable);
+        stage.addActor(scrollPane);
         
         initializeValues();
         setupListeners();
@@ -143,6 +181,16 @@ public class Settings extends AppMenu {
         
         sfxVolumeSlider.setValue(0.8f);
         sfxToggleCheckBox.setChecked(true);
+        
+        // Initialize game settings from player
+        Player player = App.getInstance().getPlayer();
+        if (player != null) {
+            autoReloadCheckBox.setChecked(player.getAutoReload());
+            blackAndWhiteCheckBox.setChecked(player.getBlackAndWhiteScreen());
+        } else {
+            autoReloadCheckBox.setChecked(false);
+            blackAndWhiteCheckBox.setChecked(false);
+        }
         
         if (enhancedMusicService != null) {
             try {
@@ -263,6 +311,49 @@ public class Settings extends AppMenu {
             }
         });
         
+        autoReloadCheckBox.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean enabled = autoReloadCheckBox.isChecked();
+                Player player = App.getInstance().getPlayer();
+                if (player != null) {
+                    player.setAutoReload(enabled);
+                    // Save to database
+                    SettingsController settingsController = (SettingsController) controller;
+                    settingsController.getDatabaseManager().savePlayer(player);
+                    statusLabel.setText("Auto reload " + (enabled ? "enabled" : "disabled"));
+                } else {
+                    statusLabel.setText("No player logged in");
+                }
+                Gdx.app.log("Settings", "Auto reload toggled: " + enabled);
+            }
+        });
+        
+        blackAndWhiteCheckBox.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean enabled = blackAndWhiteCheckBox.isChecked();
+                Player player = App.getInstance().getPlayer();
+                if (player != null) {
+                    player.setBlackAndWhiteScreen(enabled);
+                    // Save to database
+                    SettingsController settingsController = (SettingsController) controller;
+                    settingsController.getDatabaseManager().savePlayer(player);
+                    statusLabel.setText("Black and white " + (enabled ? "enabled" : "disabled"));
+                } else {
+                    statusLabel.setText("No player logged in");
+                }
+                Gdx.app.log("Settings", "Black and white toggled: " + enabled);
+            }
+        });
+        
+        controlsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                openControlsMenu();
+            }
+        });
+        
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -280,6 +371,15 @@ public class Settings extends AppMenu {
         Dawn.getInstance().setScreen(mainMenu);
         statusLabel.setText("Returning to main menu...");
         Gdx.app.log("Settings", "Returning to main menu");
+    }
+    
+    private void openControlsMenu() {
+        SettingsController settingsController = (SettingsController) controller;
+        ControlsMenuController controlsController = new ControlsMenuController(settingsController.getDatabaseManager());
+        ControlsMenu controlsMenu = new ControlsMenu(controlsController, GameAssetManager.getInstance().getSkin());
+        Dawn.getInstance().setScreen(controlsMenu);
+        statusLabel.setText("Opening controls menu...");
+        Gdx.app.log("Settings", "Opening controls menu");
     }
     
     public void updateMusicTracks(Array<String> availableTracks) {

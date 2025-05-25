@@ -3,7 +3,6 @@ package com.example.dawn.models;
 
 public class App {
     private static App instance;
-    private Game game;
     private Player player;
     
     private App() {
@@ -15,10 +14,6 @@ public class App {
             instance = new App();
         }
         return instance;
-    }
-
-    public Game getGame() {
-        return game;
     }
 
     public Player getPlayer() {

@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.dawn.controller.SignUpMenuController;
 import com.example.dawn.models.Result;
+import com.example.dawn.service.EnhancedMusicService;
 
 
 public class SignUpMenu extends AppMenu {
@@ -27,11 +28,13 @@ public class SignUpMenu extends AppMenu {
     private final TextField passwordConfirmField;
     private final TextField securityQuestionField;
     public Table table;
+    private final EnhancedMusicService enhancedMusicService;
 
     public SignUpMenu(SignUpMenuController controller, Skin skin) {
         super(controller);
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+        this.enhancedMusicService = controller.getEnhancedMusicService();
         
         this.registerButton = new TextButton("Register", skin);
         this.guestButton = new TextButton("Play as Guest", skin);
@@ -53,6 +56,11 @@ public class SignUpMenu extends AppMenu {
 
     @Override
     public void show() {
+        // Start playing menu music when the signup menu is shown
+        if (enhancedMusicService != null) {
+            enhancedMusicService.switchToMenuMusic();
+        }
+
         table.setFillParent(true);
         table.center();
 
@@ -106,7 +114,7 @@ public class SignUpMenu extends AppMenu {
         guestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((SignUpMenuController) controller).guestLogin(); // go to pregame
+                ((SignUpMenuController) controller).guestLogin();
             }
         });
 

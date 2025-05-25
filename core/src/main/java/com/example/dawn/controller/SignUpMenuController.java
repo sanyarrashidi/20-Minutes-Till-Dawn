@@ -10,14 +10,18 @@ import com.example.dawn.models.DatabaseManager;
 import com.example.dawn.models.GameAssetManager;
 import com.example.dawn.models.Player;
 import com.example.dawn.models.Result;
+import com.example.dawn.service.EnhancedMusicService;
 import com.example.dawn.view.LoginMenu;
 import com.example.dawn.view.MainMenu;
+import com.example.dawn.view.PregameMenu;
 
 public class SignUpMenuController extends Controller {
     private final DatabaseManager databaseManager;
+    private final EnhancedMusicService enhancedMusicService;
 
-    public SignUpMenuController(DatabaseManager databaseManager) {
+    public SignUpMenuController(DatabaseManager databaseManager, EnhancedMusicService enhancedMusicService) {
         this.databaseManager = databaseManager;
+        this.enhancedMusicService = enhancedMusicService;
     }
 
     public Result register(String username, String password, String passwordConfirm, String securityAnswer) {
@@ -46,8 +50,20 @@ public class SignUpMenuController extends Controller {
         return new Result(true, "Player registered successfully");
     }
 
-    public Result guestLogin() {
-        return new Result(true, "Guest login successful");
+    public void guestLogin() {
+        // Create a temporary guest player with default character
+        Character shana = Dawn.getDatabaseManager().getCharacter("Shana");
+        if (shana == null) {
+            System.out.println("Error: Default character 'Shana' not found!");
+            return;
+        }
+        
+        ArrayList<Character> characters = new ArrayList<>();
+        characters.add(shana);
+        Player guestPlayer = new Player("Guest", "", "", 0, 0, 0, 0, 0, shana, characters);
+        App.getInstance().setPlayer(guestPlayer);
+        
+        Dawn.getInstance().setScreen(new PregameMenu(new PregameMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
     }
 
     public void goToLogin() {
@@ -56,5 +72,9 @@ public class SignUpMenuController extends Controller {
 
     public void goToMainMenu() {
         Dawn.getInstance().setScreen(new MainMenu(new MainMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
+    }
+
+    public EnhancedMusicService getEnhancedMusicService() {
+        return enhancedMusicService;
     }
 }

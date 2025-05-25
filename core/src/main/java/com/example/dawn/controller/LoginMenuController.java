@@ -38,7 +38,7 @@ public class LoginMenuController extends Controller {
     }
 
     public void goToSignUp() {
-        Dawn.getInstance().setScreen(new SignUpMenu(new SignUpMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
+        Dawn.getInstance().setScreen(new SignUpMenu(new SignUpMenuController(databaseManager, Dawn.getEnhancedMusicService()), GameAssetManager.getInstance().getSkin()));
     }
 
     public Result forgotPassword(String username, String securityAnswer, String password, String passwordConfirm) {

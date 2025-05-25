@@ -8,6 +8,7 @@ import com.example.dawn.models.Character;
 import com.example.dawn.models.DatabaseManager;
 import com.example.dawn.models.GameAssetManager;
 import com.example.dawn.models.Weapon;
+import com.example.dawn.view.GameScreen;
 import com.example.dawn.view.MainMenu;
 
 public class PregameMenuController extends Controller {
@@ -61,22 +62,31 @@ public class PregameMenuController extends Controller {
     }
 
     public void startGame() {
+        // Check if player is logged in
+        if (App.getInstance().getPlayer() == null) {
+            System.out.println("Error: No player logged in!");
+            return;
+        }
+        
         // Update player's character and weapon before starting the game
         if (selectedCharacter != null) {
             App.getInstance().getPlayer().setCharacter(selectedCharacter);
         }
-        if (selectedWeapon != null) {
+        if (selectedWeapon != null && App.getInstance().getPlayer().getCharacter() != null) {
             App.getInstance().getPlayer().getCharacter().setWeapon(selectedWeapon);
         }
         
         // Save the updated player data
         databaseManager.savePlayer(App.getInstance().getPlayer());
         
-        // TODO: Start the actual game with the selected duration
-        // For now, this is a placeholder - you'll need to implement the actual game screen
+        // Start the actual game with the new GameScreen
+        GameScreenController gameController = new GameScreenController(databaseManager);
+        GameScreen gameScreen = new GameScreen(gameController);
+        Dawn.getInstance().setScreen(gameScreen);
+        
         System.out.println("Starting game with:");
-        System.out.println("Character: " + selectedCharacter.getName());
-        System.out.println("Weapon: " + selectedWeapon.getName());
+        System.out.println("Character: " + (selectedCharacter != null ? selectedCharacter.getName() : "None"));
+        System.out.println("Weapon: " + (selectedWeapon != null ? selectedWeapon.getName() : "None"));
         System.out.println("Duration: " + selectedGameDuration + " minutes");
     }
 

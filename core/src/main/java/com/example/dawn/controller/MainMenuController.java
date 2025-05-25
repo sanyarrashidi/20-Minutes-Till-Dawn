@@ -14,7 +14,6 @@ import com.example.dawn.view.Settings;
 
 public class MainMenuController extends Controller {
     private final DatabaseManager databaseManager;
-    private static EnhancedMusicService sharedMusicService;
 
     public MainMenuController(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
@@ -41,30 +40,24 @@ public class MainMenuController extends Controller {
         SettingsController settingsController = new SettingsController(databaseManager);
         Settings settingsView = new Settings(settingsController, GameAssetManager.getInstance().getSkin());
         
-        initializeMusicService();
+        EnhancedMusicService musicService = Dawn.getEnhancedMusicService();
         
         settingsController.setSettingsView(settingsView);
-        settingsController.setEnhancedMusicService(sharedMusicService);
-        settingsView.setEnhancedMusicService(sharedMusicService);
+        settingsController.setEnhancedMusicService(musicService);
+        settingsView.setEnhancedMusicService(musicService);
         
         Dawn.getInstance().setScreen(settingsView);
     }
     
-    private void initializeMusicService() {
-        if (sharedMusicService == null) {
-            sharedMusicService = new EnhancedMusicService();
-            sharedMusicService.initialize();
-        }
-    }
-    
     public EnhancedMusicService getMusicService() {
-        initializeMusicService();
-        return sharedMusicService;
+        return Dawn.getEnhancedMusicService();
     }
     
     public void startMenuMusic() {
-        initializeMusicService();
-        sharedMusicService.switchToMenuMusic();
+        EnhancedMusicService musicService = Dawn.getEnhancedMusicService();
+        if (musicService != null) {
+            musicService.switchToMenuMusic();
+        }
     }
 
     public void goToPregame() {

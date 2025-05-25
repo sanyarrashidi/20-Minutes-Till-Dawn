@@ -60,11 +60,16 @@ public class ProfileMenuController extends Controller {
         Player player = App.getInstance().getPlayer();
         databaseManager.deletePlayer(player.getUsername());
         App.getInstance().setPlayer(null);
-        Dawn.getInstance().setScreen(new SignUpMenu(new SignUpMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
+        Dawn.getInstance().setScreen(new SignUpMenu(new SignUpMenuController(databaseManager, Dawn.getEnhancedMusicService()), GameAssetManager.getInstance().getSkin()));
     }
 
     public void goToMainMenu() {
         Dawn.getInstance().setScreen(new MainMenu(new MainMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
+    }
+
+    public void logout() {
+        App.getInstance().setPlayer(null);
+        Dawn.getInstance().setScreen(new SignUpMenu(new SignUpMenuController(databaseManager, Dawn.getEnhancedMusicService()), GameAssetManager.getInstance().getSkin()));
     }
 
     public DatabaseManager getDatabaseManager() {

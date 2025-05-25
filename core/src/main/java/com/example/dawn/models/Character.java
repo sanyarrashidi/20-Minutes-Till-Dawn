@@ -1,5 +1,7 @@
 package com.example.dawn.models;
 
+import java.util.ArrayList;
+
 public class Character {
     private String imagePath;
     private String name;
@@ -10,6 +12,8 @@ public class Character {
     private int kills = 0;
     private int survivalDuration = 0;
     private Weapon weapon;
+    private ArrayList<String> stillImagePaths;
+    private ArrayList<String> movingImagePaths;
     
     public Character() {
     }
@@ -20,6 +24,8 @@ public class Character {
         this.description = description;
         this.unlockCost = unlockCost;
         this.hp = hp;
+        this.stillImagePaths = new ArrayList<>();
+        this.movingImagePaths = new ArrayList<>();
     }
 
     public String getImagePath() {
@@ -92,5 +98,21 @@ public class Character {
 
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
+    }
+
+    public ArrayList<String> getStillImagePaths() {
+        return stillImagePaths;
+    }
+
+    public ArrayList<String> getMovingImagePaths() {
+        return movingImagePaths;
+    }
+
+    public void setStillImagePaths(ArrayList<String> stillImagePaths) {
+        this.stillImagePaths = stillImagePaths;
+    }
+
+    public void setMovingImagePaths(ArrayList<String> movingImagePaths) {
+        this.movingImagePaths = movingImagePaths;
     }
 }
