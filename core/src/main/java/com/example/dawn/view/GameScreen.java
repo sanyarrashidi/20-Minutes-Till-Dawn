@@ -2,12 +2,17 @@ package com.example.dawn.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,6 +36,9 @@ public class GameScreen extends AppMenu {
     private Array<Texture> idleTextures;
     private Array<Texture> movingTextures;
     private Texture weaponTexture;
+    private Texture bulletTexture;
+    private Texture cursorTexture;
+    private Texture avatarTexture;
     
     // Game state
     private Vector2 playerPosition;
@@ -59,6 +67,43 @@ public class GameScreen extends AppMenu {
     private Vector2 mouseWorldPosition = new Vector2();
     private float weaponRotation = 0f;
     
+    // Bullet system
+    private Array<Bullet> bullets = new Array<>();
+    private int shootKey = Input.Keys.SPACE; // Default shoot key
+    private boolean shootKeyPressed = false; // Track shoot key state for single shots
+    
+    // UI elements
+    private BitmapFont font;
+    private ShapeRenderer shapeRenderer;
+    private OrthographicCamera uiCamera;
+    
+    // Bullet class
+    private static class Bullet {
+        Vector2 position;
+        Vector2 velocity;
+        float rotation;
+        boolean active;
+        
+        public Bullet(float x, float y, float velocityX, float velocityY, float rotation) {
+            this.position = new Vector2(x, y);
+            this.velocity = new Vector2(velocityX, velocityY);
+            this.rotation = rotation;
+            this.active = true;
+        }
+        
+        public void update(float delta) {
+            position.add(velocity.x * delta, velocity.y * delta);
+        }
+        
+        public boolean isOffScreen(OrthographicCamera camera) {
+            float margin = 100f; // Allow bullets to go slightly off screen before removing
+            return position.x < camera.position.x - camera.viewportWidth/2 - margin ||
+                   position.x > camera.position.x + camera.viewportWidth/2 + margin ||
+                   position.y < camera.position.y - camera.viewportHeight/2 - margin ||
+                   position.y > camera.position.y + camera.viewportHeight/2 + margin;
+        }
+    }
+    
     public GameScreen(GameScreenController controller) {
         super(controller);
         this.gameController = controller;
@@ -73,6 +118,14 @@ public class GameScreen extends AppMenu {
         // Initialize batch
         batch = new SpriteBatch();
         
+        // Initialize UI elements
+        font = new BitmapFont();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(1.2f);
+        shapeRenderer = new ShapeRenderer();
+        uiCamera = new OrthographicCamera();
+        uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        
         // Initialize player position (start at center)
         playerPosition = new Vector2(0, 0);
         playerVelocity = new Vector2();
@@ -82,6 +135,9 @@ public class GameScreen extends AppMenu {
         
         System.out.println("GameScreen: Loading player controls...");
         loadPlayerControls();
+        
+        System.out.println("GameScreen: Setting up custom cursor...");
+        setupCustomCursor();
         
         System.out.println("GameScreen: Initialization complete!");
     }
@@ -144,6 +200,15 @@ public class GameScreen extends AppMenu {
         
         // Load weapon texture
         loadWeaponTexture();
+        
+        // Load bullet texture
+        loadBulletTexture();
+        
+        // Load cursor texture
+        loadCursorTexture();
+        
+        // Load avatar texture
+        loadAvatarTexture();
     }
     
     private void createAnimations() {
@@ -185,6 +250,7 @@ public class GameScreen extends AppMenu {
             moveDownKey = player.getMoveDownKey() != null ? player.getMoveDownKey() : Input.Keys.S;
             moveLeftKey = player.getMoveLeftKey() != null ? player.getMoveLeftKey() : Input.Keys.A;
             moveRightKey = player.getMoveRightKey() != null ? player.getMoveRightKey() : Input.Keys.D;
+            shootKey = player.getShootKey() != null ? player.getShootKey() : Input.Keys.SPACE;
         }
     }
     
@@ -208,6 +274,67 @@ public class GameScreen extends AppMenu {
         } catch (Exception e) {
             System.out.println("Failed to load weapon texture: " + weaponTexturePath + ", using fallback. Error: " + e.getMessage());
             weaponTexture = new Texture(Gdx.files.internal("textures/T_TileGrass.png"));
+        }
+    }
+    
+    private void loadBulletTexture() {
+        try {
+            bulletTexture = new Texture(Gdx.files.internal("textures/T_SoulIcon.png"));
+            System.out.println("Successfully loaded bullet texture: textures/T_SoulIcon.png");
+        } catch (Exception e) {
+            System.out.println("Failed to load bullet texture, using fallback. Error: " + e.getMessage());
+            bulletTexture = new Texture(Gdx.files.internal("textures/T_TileGrass.png"));
+        }
+    }
+    
+    private void loadCursorTexture() {
+        try {
+            cursorTexture = new Texture(Gdx.files.internal("textures/T_Cursor.png"));
+            System.out.println("Successfully loaded cursor texture: textures/T_Cursor.png");
+        } catch (Exception e) {
+            System.out.println("Failed to load cursor texture, using fallback. Error: " + e.getMessage());
+            cursorTexture = new Texture(Gdx.files.internal("textures/T_TileGrass.png"));
+        }
+    }
+    
+    private void loadAvatarTexture() {
+        Player player = App.getInstance().getPlayer();
+        String avatarTexturePath = "textures/T_TileGrass.png"; // Default fallback
+        
+        if (player != null && player.getCharacter() != null) {
+            String characterName = player.getCharacter().getName();
+            if (characterName != null && !characterName.isEmpty()) {
+                avatarTexturePath = "avatars/" + characterName + "_Portrait.png";
+                System.out.println("Loading avatar texture for character: " + characterName);
+            }
+        }
+        
+        try {
+            avatarTexture = new Texture(Gdx.files.internal(avatarTexturePath));
+            System.out.println("Successfully loaded avatar texture: " + avatarTexturePath);
+        } catch (Exception e) {
+            System.out.println("Failed to load avatar texture: " + avatarTexturePath + ", using fallback. Error: " + e.getMessage());
+            avatarTexture = new Texture(Gdx.files.internal("textures/T_TileGrass.png"));
+        }
+    }
+    
+    private void setupCustomCursor() {
+        if (cursorTexture != null) {
+            try {
+                // Get the texture data as a Pixmap
+                if (!cursorTexture.getTextureData().isPrepared()) {
+                    cursorTexture.getTextureData().prepare();
+                }
+                Pixmap pixmap = cursorTexture.getTextureData().consumePixmap();
+                
+                // Create cursor with hotspot at center
+                Cursor cursor = Gdx.graphics.newCursor(pixmap, pixmap.getWidth()/2, pixmap.getHeight()/2);
+                Gdx.graphics.setCursor(cursor);
+                
+                System.out.println("Custom cursor set successfully");
+            } catch (Exception e) {
+                System.out.println("Failed to set custom cursor: " + e.getMessage());
+            }
         }
     }
 
@@ -235,6 +362,9 @@ public class GameScreen extends AppMenu {
         updatePlayer(delta);
         updateCamera();
         
+        // Update bullets
+        updateBullets(delta);
+        
         // Update animation time
         animationTime += delta;
         
@@ -250,9 +380,13 @@ public class GameScreen extends AppMenu {
         renderTiles();
         renderPlayer();
         renderWeapon();
+        renderBullets();
         batch.end();
         
         // Render UI
+        renderUI();
+        
+        // Render UI stage
         stage.act(delta);
         stage.draw();
     }
@@ -297,6 +431,46 @@ public class GameScreen extends AppMenu {
             System.out.println("Movement detected! Velocity: (" + playerVelocity.x + ", " + playerVelocity.y + ")");
             System.out.println("Keys: W=" + moveUpKey + " A=" + moveLeftKey + " S=" + moveDownKey + " D=" + moveRightKey);
             System.out.println("Facing left: " + facingLeft);
+        }
+        
+        // Handle shooting
+        handleShooting();
+    }
+    
+    private void handleShooting() {
+        boolean currentShootKeyPressed = Gdx.input.isKeyPressed(shootKey);
+        
+        // Only shoot when key is first pressed (not held)
+        if (currentShootKeyPressed && !shootKeyPressed) {
+            shoot();
+        }
+        
+        shootKeyPressed = currentShootKeyPressed;
+    }
+    
+    private void shoot() {
+        // Calculate bullet spawn position (at weapon tip)
+        float weaponOffsetX = facingLeft ? -20f : 20f;
+        float weaponOffsetY = 5f;
+        float bulletStartX = playerPosition.x + weaponOffsetX;
+        float bulletStartY = playerPosition.y + weaponOffsetY;
+        
+        // Calculate bullet direction towards mouse
+        float deltaX = mouseWorldPosition.x - bulletStartX;
+        float deltaY = mouseWorldPosition.y - bulletStartY;
+        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        if (distance > 0) {
+            // Normalize direction and apply bullet speed
+            float bulletSpeed = 500f; // pixels per second
+            float velocityX = (deltaX / distance) * bulletSpeed;
+            float velocityY = (deltaY / distance) * bulletSpeed;
+            
+            // Create and add bullet
+            Bullet bullet = new Bullet(bulletStartX, bulletStartY, velocityX, velocityY, weaponRotation);
+            bullets.add(bullet);
+            
+            System.out.println("Bullet fired! Position: (" + bulletStartX + ", " + bulletStartY + ") Velocity: (" + velocityX + ", " + velocityY + ")");
         }
     }
     
@@ -412,6 +586,22 @@ public class GameScreen extends AppMenu {
                    weaponRotation); // rotation
     }
     
+    private void renderBullets() {
+        for (Bullet bullet : bullets) {
+            if (bullet.active) {
+                float bulletSize = 16f; // Make bullets half the previous size
+                float bulletX = bullet.position.x - bulletSize/2f;
+                float bulletY = bullet.position.y - bulletSize/2f;
+                batch.draw(bulletTexture, bulletX, bulletY, bulletSize, bulletSize);
+            }
+        }
+        
+        // Debug output for bullet count
+        if (Gdx.graphics.getFrameId() % 60 == 0 && bullets.size > 0) { // Print once per second
+            System.out.println("Active bullets: " + bullets.size);
+        }
+    }
+    
     private void updateMouseWorldPosition() {
         // Convert screen coordinates to world coordinates
         Vector3 mouseScreenPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -426,9 +616,127 @@ public class GameScreen extends AppMenu {
         weaponRotation = (float) Math.toDegrees(Math.atan2(deltaY, deltaX));
     }
     
+    private void updateBullets(float delta) {
+        // Update bullet positions
+        for (Bullet bullet : bullets) {
+            if (bullet.active) {
+                bullet.update(delta);
+                
+                // Remove bullets that are off screen
+                if (bullet.isOffScreen(camera)) {
+                    bullet.active = false;
+                }
+            }
+        }
+        
+        // Remove inactive bullets using traditional loop
+        for (int i = bullets.size - 1; i >= 0; i--) {
+            if (!bullets.get(i).active) {
+                bullets.removeIndex(i);
+            }
+        }
+    }
+    
+    private void renderUI() {
+        Player player = App.getInstance().getPlayer();
+        if (player == null || player.getCharacter() == null) return;
+        
+        // Set UI camera
+        uiCamera.update();
+        batch.setProjectionMatrix(uiCamera.combined);
+        shapeRenderer.setProjectionMatrix(uiCamera.combined);
+        
+        // UI Box dimensions and position
+        float boxX = 20f;
+        float boxY = Gdx.graphics.getHeight() - 200f;
+        float boxWidth = 300f;
+        float boxHeight = 180f;
+        
+        // Draw UI background box
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, 0.7f); // Semi-transparent black
+        shapeRenderer.rect(boxX, boxY, boxWidth, boxHeight);
+        shapeRenderer.end();
+        
+        // Draw UI border
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.WHITE);
+        shapeRenderer.rect(boxX, boxY, boxWidth, boxHeight);
+        shapeRenderer.end();
+        
+        // Draw UI content
+        batch.begin();
+        
+        // Character avatar
+        float avatarSize = 60f;
+        float avatarX = boxX + 10f;
+        float avatarY = boxY + boxHeight - avatarSize - 10f;
+        batch.draw(avatarTexture, avatarX, avatarY, avatarSize, avatarSize);
+        
+        // Text information
+        float textX = avatarX + avatarSize + 10f;
+        float textY = boxY + boxHeight - 20f;
+        float lineHeight = 18f;
+        
+        // Username and Character name
+        font.draw(batch, "Player: " + player.getUsername(), textX, textY);
+        textY -= lineHeight;
+        font.draw(batch, "Character: " + player.getCharacter().getName(), textX, textY);
+        textY -= lineHeight;
+        
+        // HP, Score, Kills
+        font.draw(batch, "HP: " + player.getCharacter().getHp(), textX, textY);
+        textY -= lineHeight;
+        font.draw(batch, "Score: " + player.getCharacter().getScore(), textX, textY);
+        textY -= lineHeight;
+        font.draw(batch, "Kills: " + player.getCharacter().getKills(), textX, textY);
+        textY -= lineHeight;
+        
+        // Level
+        int level = player.getCharacter().getLevel();
+        font.draw(batch, "Level: " + level, textX, textY);
+        textY -= lineHeight + 5f;
+        
+        batch.end();
+        
+        // XP Bar
+        float barX = textX;
+        float barY = textY - 15f;
+        float barWidth = 150f;
+        float barHeight = 12f;
+        
+        int currentXp = player.getCharacter().getXpForCurrentLevel();
+        int maxXp = player.getCharacter().getXpNeededForNextLevel();
+        float xpProgress = maxXp > 0 ? (float) currentXp / maxXp : 0f;
+        
+        // Draw XP bar background
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 1f); // Dark gray
+        shapeRenderer.rect(barX, barY, barWidth, barHeight);
+        shapeRenderer.end();
+        
+        // Draw XP bar fill
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0.2f, 0.8f, 0.2f, 1f); // Green
+        shapeRenderer.rect(barX, barY, barWidth * xpProgress, barHeight);
+        shapeRenderer.end();
+        
+        // Draw XP bar border
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.WHITE);
+        shapeRenderer.rect(barX, barY, barWidth, barHeight);
+        shapeRenderer.end();
+        
+        // Draw XP text on bar
+        batch.begin();
+        font.draw(batch, currentXp + "/" + maxXp + " XP", barX + 5f, barY + barHeight - 2f);
+        batch.end();
+    }
+    
     @Override
     public void resize(int width, int height) {
         camera.setToOrtho(false, width, height);
+        uiCamera.setToOrtho(false, width, height);
         stage.getViewport().update(width, height, true);
     }
     
@@ -459,6 +767,29 @@ public class GameScreen extends AppMenu {
                     texture.dispose();
                 }
             }
+        }
+        
+        // Dispose bullet texture
+        if (bulletTexture != null) {
+            bulletTexture.dispose();
+        }
+        
+        // Dispose cursor texture
+        if (cursorTexture != null) {
+            cursorTexture.dispose();
+        }
+        
+        // Dispose avatar texture
+        if (avatarTexture != null) {
+            avatarTexture.dispose();
+        }
+        
+        // Dispose UI elements
+        if (font != null) {
+            font.dispose();
+        }
+        if (shapeRenderer != null) {
+            shapeRenderer.dispose();
         }
         
         if (batch != null) {

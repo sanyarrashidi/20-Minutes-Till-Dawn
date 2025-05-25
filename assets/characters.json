@@ -27,27 +27,6 @@
     "unlockCost": 3150,
     "description": "Summons a spirit when enemies are killed. Spirits chase down nearby enemies and deal 8 damage.",
     "stillImagePaths": [
-      "heros/Idle_0 #8328.png",
-      "heros/Idle_1 #8358.png",
-      "heros/Idle_2 #8817.png",
-      "heros/Idle_3 #8455.png",
-      "heros/Idle_4 #8316.png",
-      "heros/Idle_5 #8305.png"
-    ],
-    "movingImagePaths": [
-      "heros/Run_0 #8760.png",
-      "heros/Run_1 #8776.png",
-      "heros/Run_2 #8284.png",
-      "heros/Run_3 #8347.png"
-    ]
-  },
-  {
-    "name": "Scarlett",
-    "imagePath": "avatars/Scarlett_Portrait.png",
-    "hp": 3,
-    "unlockCost": 3150,
-    "description": "On every 3rd shot, throws out a wave of fire that burns enemies for 3 damage per second.",
-    "stillImagePaths": [
       "heros/Idle_0 #8333.png",
       "heros/Idle_1 #8363.png",
       "heros/Idle_2 #8822.png",
@@ -63,11 +42,11 @@
     ]
   },
   {
-    "name": "Diamond",
-    "imagePath": "avatars/Diamond_Portrait.png",
-    "hp": 7,
-    "unlockCost": 1350,
-    "description": "Has the highest starting HP of all the characters.",
+    "name": "Scarlett",
+    "imagePath": "avatars/Scarlett_Portrait.png",
+    "hp": 3,
+    "unlockCost": 3150,
+    "description": "On every 3rd shot, throws out a wave of fire that burns enemies for 3 damage per second.",
     "stillImagePaths": [
       "heros/Idle_0 #8327.png",
       "heros/Idle_1 #8357.png",
@@ -81,6 +60,27 @@
       "heros/Run_1 #8775.png",
       "heros/Run_2 #8283.png",
       "heros/Run_3 #8346.png"
+    ]    
+  },
+  {
+    "name": "Diamond",
+    "imagePath": "avatars/Diamond_Portrait.png",
+    "hp": 7,
+    "unlockCost": 1350,
+    "description": "Has the highest starting HP of all the characters.",
+    "stillImagePaths": [
+      "heros/Idle_0 #8328.png",
+      "heros/Idle_1 #8358.png",
+      "heros/Idle_2 #8817.png",
+      "heros/Idle_3 #8455.png",
+      "heros/Idle_4 #8316.png",
+      "heros/Idle_5 #8305.png"
+    ],
+    "movingImagePaths": [
+      "heros/Run_0 #8760.png",
+      "heros/Run_1 #8776.png",
+      "heros/Run_2 #8284.png",
+      "heros/Run_3 #8347.png"
     ]
   },
   {

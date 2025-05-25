@@ -11,6 +11,7 @@ public class Character {
     private int score = 0;
     private int kills = 0;
     private int survivalDuration = 0;
+    private int xp = 0;
     private Weapon weapon;
     private ArrayList<String> stillImagePaths;
     private ArrayList<String> movingImagePaths;
@@ -60,6 +61,49 @@ public class Character {
         return survivalDuration;
     }
 
+    public int getXp() {
+        return xp;
+    }
+    
+    public int getLevel() {
+        // Level starts from 1, needs 20*i XP to reach level i+1
+        // Level 1: 0-19 XP, Level 2: 20-59 XP, Level 3: 60-119 XP, etc.
+        int level = 1;
+        int totalXpNeeded = 0;
+        
+        while (totalXpNeeded <= xp) {
+            totalXpNeeded += 20 * level;
+            if (totalXpNeeded <= xp) {
+                level++;
+            }
+        }
+        
+        return level;
+    }
+    
+    public int getXpForCurrentLevel() {
+        // XP accumulated for the current level
+        int level = 1;
+        int totalXpUsed = 0;
+        
+        while (true) {
+            int xpNeededForThisLevel = 20 * level;
+            if (totalXpUsed + xpNeededForThisLevel <= xp) {
+                totalXpUsed += xpNeededForThisLevel;
+                level++;
+            } else {
+                break;
+            }
+        }
+        
+        return xp - totalXpUsed;
+    }
+    
+    public int getXpNeededForNextLevel() {
+        // XP needed to reach the next level
+        return 20 * getLevel();
+    }
+
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
@@ -90,6 +134,14 @@ public class Character {
 
     public void setSurvivalDuration(int survivalDuration) {
         this.survivalDuration = survivalDuration;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
+    
+    public void addXp(int amount) {
+        this.xp += amount;
     }
 
     public Weapon getWeapon() {
