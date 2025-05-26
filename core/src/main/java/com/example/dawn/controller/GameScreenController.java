@@ -24,8 +24,13 @@ public class GameScreenController extends Controller {
     }
     
     public void endGame() {
-        // TODO: Implement game ending logic (save score, etc.)
-        returnToMainMenu();
+        endGame(com.example.dawn.models.GameSummary.GameEndReason.TIME_UP);
+    }
+    
+    public void endGame(com.example.dawn.models.GameSummary.GameEndReason reason) {
+        // This method will be called from GameScreen with the appropriate reason
+        // The GameScreen will handle creating and showing the summary
+        System.out.println("Game ended with reason: " + reason);
     }
     
     public void returnToMainMenu() {

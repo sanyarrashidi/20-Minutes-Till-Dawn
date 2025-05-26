@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.dawn.controller.Controller;
 import com.example.dawn.controller.MainMenuController;
 import com.example.dawn.models.App;
+import com.example.dawn.models.Player;
 
 public class MainMenu extends AppMenu {
     private final TextButton startGameButton;
@@ -78,8 +79,11 @@ public class MainMenu extends AppMenu {
 
         mainTable.add(playerInfoTable).top().left().pad(10);
 
-        usernameLabel.setText(App.getInstance().getPlayer().getUsername());
-        characterLabel.setText(App.getInstance().getPlayer().getCharacter().getName());
+        // Update all player info with current data
+        Player currentPlayer = App.getInstance().getPlayer();
+        usernameLabel.setText(currentPlayer.getUsername());
+        characterLabel.setText(currentPlayer.getCharacter().getName());
+        scoreLabel.setText(String.valueOf(currentPlayer.getHighScore()));
 
         Table buttonTable = new Table();
         buttonTable.add(startGameButton).width(400).height(90).pad(10).row();

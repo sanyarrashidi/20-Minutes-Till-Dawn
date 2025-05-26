@@ -1,6 +1,7 @@
 package com.example.dawn.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Character {
     private String imagePath;
@@ -8,6 +9,8 @@ public class Character {
     private String description;
     private int unlockCost;
     private int hp;
+    private int initialHp; // Store the original HP value for resetting
+    private int speed = 300; // Movement speed in pixels per second (default)
     private int score = 0;
     private int kills = 0;
     private int survivalDuration = 0;
@@ -16,7 +19,15 @@ public class Character {
     private ArrayList<String> stillImagePaths;
     private ArrayList<String> movingImagePaths;
     
+    // Ability system
+    private List<Ability> permanentAbilities;
+    private List<ActiveAbility> activeAbilities;
+    private int bonusMaxAmmo = 0; // From AMOCREASE ability
+    private int bonusProjectiles = 0; // From PROCREASE ability
+    
     public Character() {
+        this.permanentAbilities = new ArrayList<>();
+        this.activeAbilities = new ArrayList<>();
     }
 
     public Character(String name, String imagePath, int hp, int unlockCost, String description) {
@@ -25,8 +36,12 @@ public class Character {
         this.description = description;
         this.unlockCost = unlockCost;
         this.hp = hp;
+        this.initialHp = hp; // Store the initial HP value
+        this.speed = 300; // Default speed
         this.stillImagePaths = new ArrayList<>();
         this.movingImagePaths = new ArrayList<>();
+        this.permanentAbilities = new ArrayList<>();
+        this.activeAbilities = new ArrayList<>();
     }
 
     public String getImagePath() {
@@ -166,5 +181,99 @@ public class Character {
 
     public void setMovingImagePaths(ArrayList<String> movingImagePaths) {
         this.movingImagePaths = movingImagePaths;
+    }
+    
+    public int getInitialHp() {
+        return initialHp;
+    }
+    
+    public void setInitialHp(int initialHp) {
+        this.initialHp = initialHp;
+    }
+    
+    public void resetHp() {
+        this.hp = this.initialHp;
+    }
+    
+    public void resetForNewGame() {
+        // Reset HP to initial value
+        this.hp = this.initialHp;
+        
+        // DO NOT reset accumulated stats (score, kills, survivalDuration, xp) - these should persist across games
+        // Only reset temporary game state:
+        
+        // Clear all abilities (both permanent and active)
+        this.permanentAbilities.clear();
+        this.activeAbilities.clear();
+        
+        // Reset ability bonuses
+        this.bonusMaxAmmo = 0;
+        this.bonusProjectiles = 0;
+        
+        System.out.println("Character reset for new game - HP: " + this.hp + ", Accumulated stats preserved (Score: " + this.score + ", Kills: " + this.kills + ", XP: " + this.xp + "), Abilities cleared, Bonuses reset");
+    }
+    
+    public int getSpeed() {
+        return speed;
+    }
+    
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+    
+    // Ability system methods
+    public List<Ability> getPermanentAbilities() {
+        return permanentAbilities;
+    }
+    
+    public List<ActiveAbility> getActiveAbilities() {
+        return activeAbilities;
+    }
+    
+    public void addPermanentAbility(Ability ability) {
+        if (!permanentAbilities.contains(ability)) {
+            permanentAbilities.add(ability);
+        }
+    }
+    
+    public void addActiveAbility(Ability ability) {
+        // Remove existing instance of same ability if present
+        activeAbilities.removeIf(active -> active.getAbility() == ability);
+        // Add new instance
+        activeAbilities.add(new ActiveAbility(ability, ability.getDuration()));
+    }
+    
+    public boolean hasActiveAbility(Ability ability) {
+        return activeAbilities.stream().anyMatch(active -> active.getAbility() == ability);
+    }
+    
+    public int getBonusMaxAmmo() {
+        return bonusMaxAmmo;
+    }
+    
+    public void addBonusMaxAmmo(int amount) {
+        this.bonusMaxAmmo += amount;
+    }
+    
+    public int getBonusProjectiles() {
+        return bonusProjectiles;
+    }
+    
+    public void addBonusProjectiles(int amount) {
+        this.bonusProjectiles += amount;
+    }
+    
+    public int getMaxHp() {
+        // Base HP + VITALITY bonuses
+        int vitalityCount = (int) permanentAbilities.stream().filter(ability -> ability == Ability.VITALITY).count();
+        return initialHp + vitalityCount;
+    }
+    
+    public void updateActiveAbilities(float delta) {
+        // Update timers and remove expired abilities
+        activeAbilities.removeIf(active -> {
+            active.update(delta);
+            return active.isExpired();
+        });
     }
 }

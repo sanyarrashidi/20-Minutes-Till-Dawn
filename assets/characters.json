@@ -3,6 +3,7 @@
     "name": "Dasher",
     "imagePath": "avatars/Dasher_Portrait.png",
     "hp": 2,
+    "speed": 6,
     "unlockCost": 3150,
     "description": "Every 10 seconds, temporarily transforms into a deer. While in deer form, she is invincible and deals 100 damage to enemies she runs over. Deer form's damage is increased by Summon damage and Move Speed.",
     "stillImagePaths": [
@@ -23,7 +24,8 @@
   {
     "name": "Lilith",
     "imagePath": "avatars/Lilith_Portrait.png",
-    "hp": 4,
+    "hp": 5,
+    "speed": 3,
     "unlockCost": 3150,
     "description": "Summons a spirit when enemies are killed. Spirits chase down nearby enemies and deal 8 damage.",
     "stillImagePaths": [
@@ -45,6 +47,7 @@
     "name": "Scarlett",
     "imagePath": "avatars/Scarlett_Portrait.png",
     "hp": 3,
+    "speed": 4,
     "unlockCost": 3150,
     "description": "On every 3rd shot, throws out a wave of fire that burns enemies for 3 damage per second.",
     "stillImagePaths": [
@@ -66,6 +69,7 @@
     "name": "Diamond",
     "imagePath": "avatars/Diamond_Portrait.png",
     "hp": 7,
+    "speed": 3,
     "unlockCost": 1350,
     "description": "Has the highest starting HP of all the characters.",
     "stillImagePaths": [
@@ -87,6 +91,7 @@
     "name": "Shana",
     "imagePath": "avatars/Shana_Portrait.png",
     "hp": 4,
+    "speed": 3,
     "unlockCost": 0,
     "description": "Starter character. Can reroll upgrades once per level.",
     "stillImagePaths": [

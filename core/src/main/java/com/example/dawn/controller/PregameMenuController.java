@@ -70,6 +70,8 @@ public class PregameMenuController extends Controller {
         
         // Update player's character and weapon before starting the game
         if (selectedCharacter != null) {
+            // Reset character for new game (HP, abilities, bonuses)
+            selectedCharacter.resetForNewGame();
             App.getInstance().getPlayer().setCharacter(selectedCharacter);
         }
         if (selectedWeapon != null && App.getInstance().getPlayer().getCharacter() != null) {

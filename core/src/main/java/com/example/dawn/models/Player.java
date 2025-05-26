@@ -18,8 +18,8 @@ public class Player {
     private Boolean blackAndWhiteScreen = false;
 
     // Control settings
-    private Integer moveUpKey = 22; // W key (Input.Keys.W)
-    private Integer moveDownKey = 19; // S key (Input.Keys.S)
+    private Integer moveUpKey = 51; // W key (Input.Keys.W)
+    private Integer moveDownKey = 47; // S key (Input.Keys.S)
     private Integer moveLeftKey = 29; // A key (Input.Keys.A)
     private Integer moveRightKey = 32; // D key (Input.Keys.D)
     private Integer reloadKey = 46; // R key (Input.Keys.R)

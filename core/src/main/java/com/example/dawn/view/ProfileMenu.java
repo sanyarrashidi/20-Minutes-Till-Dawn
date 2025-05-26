@@ -101,7 +101,16 @@ public class ProfileMenu extends AppMenu {
         stage.clear();
         Gdx.input.setInputProcessor(stage);
 
-        this.usernameLabel.setText("Username: " + App.getInstance().getPlayer().getUsername());
+        // Update all labels with current player data
+        Player currentPlayer = App.getInstance().getPlayer();
+        this.usernameLabel.setText("Username: " + currentPlayer.getUsername());
+        this.winsLabel.setText("Wins: " + currentPlayer.getWins().toString());
+        this.highScoreLabel.setText("High Score: " + currentPlayer.getHighScore().toString());
+        this.totalGamesLabel.setText("Total Games: " + currentPlayer.getTotalGames().toString());
+        this.killsLabel.setText("Kills: " + currentPlayer.getKills().toString());
+        this.survivalDurationLabel.setText("Survival Duration: " + currentPlayer.getSurvivalDuration().toString());
+        this.characterLabel.setText(currentPlayer.getCharacter().getName());
+        this.scoreLabel.setText(String.valueOf(currentPlayer.getHighScore()));
 
         mainTable = new Table(skin);
         mainTable.setFillParent(true);
