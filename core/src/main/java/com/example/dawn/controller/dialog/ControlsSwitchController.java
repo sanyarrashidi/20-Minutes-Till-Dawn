@@ -22,7 +22,7 @@ import com.example.dawn.service.controls.impl.InactiveControl;
 import com.example.dawn.service.controls.impl.KeyboardControl;
 import com.example.dawn.service.controls.impl.TouchControl;
 
-/** Allows to switch control types. */
+
 @ViewDialog(id = "switch", value = "ui/templates/dialogs/switch.lml", cacheInstance = true)
 public class ControlsSwitchController implements ActionContainer, ViewDialogShower {
     @Inject private ControlsService service;
@@ -34,7 +34,7 @@ public class ControlsSwitchController implements ActionContainer, ViewDialogShow
     @LmlActor("PAD") private Button gamePadControlButton;
     private int playerId;
 
-    /** @param playerId this screen will be used to choose controls for this player. */
+    
     public void setPlayerId(final int playerId) {
         this.playerId = playerId;
     }
@@ -47,12 +47,12 @@ public class ControlsSwitchController implements ActionContainer, ViewDialogShow
     @LmlAction("controls")
     public Iterable<ControlType> getControlTypes() {
         if (GdxUtilities.isRunningOnAndroid()) {
-            // Keyboard controls on Android do not work well...
+            
             return GdxArrays.newArray(ControlType.TOUCH, ControlType.PAD, ControlType.INACTIVE);
         } else if (GdxUtilities.isRunningOnIOS()) {
-            // Controllers (pads) do not exactly work on iOS.
+            
             return GdxArrays.newArray(ControlType.TOUCH, ControlType.INACTIVE);
-        } // Desktop supports all controllers:
+        } 
         return GdxArrays.newArray(ControlType.values());
     }
 

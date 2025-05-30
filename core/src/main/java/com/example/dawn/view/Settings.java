@@ -23,7 +23,7 @@ public class Settings extends AppMenu {
     private final Skin skin;
     private EnhancedMusicService enhancedMusicService;
     
-    // UI Components
+    
     private final Label titleLabel;
     private final Label musicVolumeLabel;
     private final Slider musicVolumeSlider;
@@ -36,7 +36,7 @@ public class Settings extends AppMenu {
     private final Slider sfxVolumeSlider;
     private final CheckBox sfxToggleCheckBox;
     
-    // New game settings UI components
+    
     private final CheckBox autoReloadCheckBox;
     private final CheckBox blackAndWhiteCheckBox;
     private final TextButton controlsButton;
@@ -68,7 +68,7 @@ public class Settings extends AppMenu {
         this.sfxVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
         this.sfxToggleCheckBox = new CheckBox("SFX ON", skin);
         
-        // Initialize new game settings UI components
+        
         this.autoReloadCheckBox = new CheckBox("Auto Reload", skin);
         this.blackAndWhiteCheckBox = new CheckBox("Black and White", skin);
         this.controlsButton = new TextButton("Controls", skin);
@@ -133,7 +133,7 @@ public class Settings extends AppMenu {
         mainTable.add(sfxToggleCheckBox).colspan(2).center().padBottom(15);
         mainTable.row();
         
-        // Game Settings Section
+        
         Label gameSettingsLabel = new Label("Game Settings", skin);
         gameSettingsLabel.setFontScale(1.4f);
         mainTable.add(gameSettingsLabel).colspan(2).center().padBottom(15);
@@ -147,7 +147,7 @@ public class Settings extends AppMenu {
         mainTable.add(blackAndWhiteCheckBox).colspan(2).center().padBottom(10);
         mainTable.row();
         
-        // Put controls and back buttons side by side
+        
         controlsButton.getLabel().setFontScale(1.2f);
         backButton.getLabel().setFontScale(1.2f);
         mainTable.add(controlsButton).center().width(250).height(60).padRight(20).padBottom(15);
@@ -158,10 +158,10 @@ public class Settings extends AppMenu {
         mainTable.add(statusLabel).colspan(2).center().padTop(10).padBottom(15);
         mainTable.row();
         
-        // Wrap in ScrollPane to ensure everything is visible
+        
         ScrollPane scrollPane = new ScrollPane(mainTable, skin);
         scrollPane.setFillParent(true);
-        scrollPane.setScrollingDisabled(true, false); // Only allow vertical scrolling
+        scrollPane.setScrollingDisabled(true, false); 
         scrollPane.setFadeScrollBars(false);
         
         stage.addActor(scrollPane);
@@ -182,7 +182,7 @@ public class Settings extends AppMenu {
         sfxVolumeSlider.setValue(0.8f);
         sfxToggleCheckBox.setChecked(true);
         
-        // Initialize game settings from player
+        
         Player player = App.getInstance().getPlayer();
         if (player != null) {
             autoReloadCheckBox.setChecked(player.getAutoReload());
@@ -295,17 +295,17 @@ public class Settings extends AppMenu {
             @Override
             public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
                 float volume = sfxVolumeSlider.getValue();
-                // TODO: Update actual SFX service volume here
+                
                 statusLabel.setText("SFX volume: " + Math.round(volume * 100) + "%");
             }
         });
         
-        // SFX toggle checkbox
+        
         sfxToggleCheckBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 boolean enabled = sfxToggleCheckBox.isChecked();
-                // TODO: Update actual SFX service enabled state here
+                
                 statusLabel.setText("SFX " + (enabled ? "enabled" : "disabled"));
                 Gdx.app.log("Settings", "SFX toggled: " + enabled);
             }
@@ -318,7 +318,7 @@ public class Settings extends AppMenu {
                 Player player = App.getInstance().getPlayer();
                 if (player != null) {
                     player.setAutoReload(enabled);
-                    // Save to database
+                    
                     SettingsController settingsController = (SettingsController) controller;
                     settingsController.getDatabaseManager().savePlayer(player);
                     statusLabel.setText("Auto reload " + (enabled ? "enabled" : "disabled"));
@@ -336,7 +336,7 @@ public class Settings extends AppMenu {
                 Player player = App.getInstance().getPlayer();
                 if (player != null) {
                     player.setBlackAndWhiteScreen(enabled);
-                    // Save to database
+                    
                     SettingsController settingsController = (SettingsController) controller;
                     settingsController.getDatabaseManager().savePlayer(player);
                     statusLabel.setText("Black and white " + (enabled ? "enabled" : "disabled"));

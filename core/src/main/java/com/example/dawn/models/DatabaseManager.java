@@ -92,7 +92,7 @@ public class DatabaseManager {
                 charactersMap = new HashMap<>();
                 if (characterArray != null) {
                     for (Character character : characterArray) {
-                        // Ensure initialHp is set if not already set
+                        
                         if (character.getInitialHp() == 0 && character.getHp() > 0) {
                             character.setInitialHp(character.getHp());
                         }

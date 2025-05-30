@@ -6,11 +6,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.example.dawn.service.controls.Control;
 import com.example.dawn.service.controls.ControlListener;
 
-/** Represents a single player. */
+
 public class Player implements ControlListener {
-    private static final float DELAY = 0.75f; // Jump delay in seconds.
-    private static final float SPEED = 750f; // Movement force. Affected by delta time.
-    private static final float JUMP = 1000f; // Jump force.
+    private static final float DELAY = 0.75f; 
+    private static final float SPEED = 750f; 
+    private static final float JUMP = 1000f; 
 
     private final Control control;
     private final Body body;
@@ -25,17 +25,17 @@ public class Player implements ControlListener {
         control.setControlListener(this);
     }
 
-    /** @return controls object that listens to player input. */
+    
     public Control getControl() {
         return control;
     }
 
-    /** @return Box2D body representing the player. */
+    
     public Body getBody() {
         return body;
     }
 
-    /** @param delta time since last update. */
+    
     public void update(final float delta) {
         control.update(viewport, body.getPosition().x, body.getPosition().y);
         timeSinceLastJump += delta;

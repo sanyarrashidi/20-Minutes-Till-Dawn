@@ -21,14 +21,14 @@ import com.example.dawn.configuration.Configuration;
 import com.example.dawn.entity.Player;
 import com.example.dawn.service.controls.Control;
 
-/** Manages 2D physics engine. */
+
 @Component
 public class Box2DService {
-    private static final Vector2 GRAVITY = new Vector2(0f, -9.81f); // Box2D world gravity vector.
-    private static final float STEP = 1f / 30f; // Length of a single Box2D step.
-    private static final float WIDTH = Dawn.WIDTH / 10f; // Width of Box2D world.
-    private static final float HEIGHT = Dawn.HEIGHT / 10f; // Height of Box2D world.
-    private static final float SIZE = 3f; // Size of players.
+    private static final Vector2 GRAVITY = new Vector2(0f, -9.81f); 
+    private static final float STEP = 1f / 30f; 
+    private static final float WIDTH = Dawn.WIDTH / 10f; 
+    private static final float HEIGHT = Dawn.HEIGHT / 10f; 
+    private static final float SIZE = 3f; 
     @Inject private ControlsService controlsService;
 
     private World world;
@@ -36,7 +36,7 @@ public class Box2DService {
     private final Viewport viewport = new StretchViewport(WIDTH, HEIGHT);
     private final Array<Player> players = GdxArrays.newArray();
 
-    /** Call this method to (re)create Box2D world according to current settings. */
+    
     public void create() {
         dispose();
         world = new World(GRAVITY, true);
@@ -50,7 +50,7 @@ public class Box2DService {
         }
     }
 
-    /** Creates Box2D bounds. */
+    
     private void createWorldBounds() {
         final BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.StaticBody;
@@ -66,8 +66,6 @@ public class Box2DService {
         shape.dispose();
     }
 
-    /** @param index ID of the player. Affects body size and position.
-     * @return a new player body. */
     private Body getPlayerBody(final int index) {
         final BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.DynamicBody;
@@ -76,18 +74,18 @@ public class Box2DService {
         switch (index) {
             case 0:
                 bodyDef.position.set(-WIDTH / 2f + SIZE * 2f, HEIGHT / 4f);
-                // Square.
+                
                 shape.setAsBox(SIZE, SIZE);
                 break;
             case 1:
                 bodyDef.position.set(0f, HEIGHT / 4f);
-                // Hexagon. Ish.
+                
                 shape.set(new float[] { -SIZE, 0f, -SIZE / 2f, SIZE, SIZE / 2f, SIZE, SIZE, 0f, SIZE / 2f, -SIZE,
                         -SIZE / 2f, -SIZE, -SIZE, 0f });
                 break;
             default:
                 bodyDef.position.set(WIDTH / 2f - SIZE * 2f, HEIGHT / 4f);
-                // Triangle.
+                
                 shape.set(new float[] { -SIZE, -SIZE, 0f, SIZE, SIZE, -SIZE, -SIZE, -SIZE });
         }
         final FixtureDef fixtureDef = new FixtureDef();
@@ -100,7 +98,7 @@ public class Box2DService {
         return body;
     }
 
-    /** @param delta time passed since last update. Will be used to update Box2D world. */
+    
     public void update(final float delta) {
         timeSinceUpdate += delta;
         while (timeSinceUpdate > STEP) {
@@ -112,25 +110,23 @@ public class Box2DService {
         }
     }
 
-    /** @param inputMultiplexer will listen to player input events. */
+    
     public void initiateControls(final InputMultiplexer inputMultiplexer) {
         for (final Player player : players) {
             player.getControl().attachInputListener(inputMultiplexer);
         }
     }
 
-    /** @param width new screen width.
-     * @param height new screen height. */
     public void resize(final int width, final int height) {
         viewport.update(width, height);
     }
 
-    /** @return direct reference to current Box2D world. Might be null. */
+    
     public World getWorld() {
         return world;
     }
 
-    /** @return viewport with game coordinates. */
+    
     public Viewport getViewport() {
         return viewport;
     }

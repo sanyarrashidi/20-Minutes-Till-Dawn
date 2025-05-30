@@ -6,6 +6,7 @@ import com.example.dawn.models.App;
 import com.example.dawn.models.DatabaseManager;
 import com.example.dawn.models.GameAssetManager;
 import com.example.dawn.service.EnhancedMusicService;
+import com.example.dawn.view.HintMenu;
 import com.example.dawn.view.LoginMenu;
 import com.example.dawn.view.PregameMenu;
 import com.example.dawn.view.ProfileMenu;
@@ -47,6 +48,10 @@ public class MainMenuController extends Controller {
         settingsView.setEnhancedMusicService(musicService);
         
         Dawn.getInstance().setScreen(settingsView);
+    }
+    
+    public void goToHintMenu() {
+        Dawn.getInstance().setScreen(new HintMenu(new HintMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
     }
     
     public EnhancedMusicService getMusicService() {

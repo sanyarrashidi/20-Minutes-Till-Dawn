@@ -29,7 +29,7 @@ public enum Ability {
     
     public float getDuration() {
         if (isTemporary()) {
-            return 10f; // 10 seconds for temporary abilities
+            return 10f; 
         }
         return 0f;
     }

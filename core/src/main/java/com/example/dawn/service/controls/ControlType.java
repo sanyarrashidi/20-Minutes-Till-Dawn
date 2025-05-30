@@ -10,7 +10,7 @@ import com.example.dawn.service.controls.impl.InactiveControl;
 import com.example.dawn.service.controls.impl.KeyboardControl;
 import com.example.dawn.service.controls.impl.TouchControl;
 
-/** Represents all types of available input sources. */
+
 public enum ControlType {
     TOUCH {
         @Override
@@ -31,7 +31,7 @@ public enum ControlType {
         public Control create(final ControlsData data) {
             final Array<Controller> controllers = Controllers.getControllers();
             if (GdxArrays.isEmpty(controllers) || !GdxArrays.isIndexValid(controllers, data.index)) {
-                // Controller unavailable. Fallback to inactive.
+                
                 return new InactiveControl();
             }
             final Control control = new GamePadControl(controllers.get(data.index));
@@ -46,7 +46,5 @@ public enum ControlType {
         }
     };
 
-    /** @param data serialized controls.
-     * @return deserialized controller. */
     public abstract Control create(ControlsData data);
 }

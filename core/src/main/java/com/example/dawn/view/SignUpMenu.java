@@ -56,7 +56,7 @@ public class SignUpMenu extends AppMenu {
 
     @Override
     public void show() {
-        // Start playing menu music when the signup menu is shown
+        
         if (enhancedMusicService != null) {
             enhancedMusicService.switchToMenuMusic();
         }
@@ -141,17 +141,17 @@ public class SignUpMenu extends AppMenu {
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
+        
     }
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
+        
     }
 
     @Override
     public void hide() {
-        // TODO Auto-generated method stub
+        
     }
 
     @Override

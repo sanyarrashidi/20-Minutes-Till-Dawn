@@ -8,7 +8,7 @@ import com.example.dawn.service.controls.Control;
 import com.example.dawn.service.controls.ControlListener;
 import com.example.dawn.service.controls.ControlType;
 
-/** Mock-up controls representing an inactive player. */
+
 public class InactiveControl implements Control {
     @Override
     public boolean isActive() {

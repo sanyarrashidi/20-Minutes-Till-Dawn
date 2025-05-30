@@ -14,10 +14,6 @@ import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
-/**
- * Enhanced music service that extends the basic MusicService functionality
- * to support multiple tracks, track selection, and context-aware music switching
- */
 @Component
 public class EnhancedMusicService implements ActionContainer, Disposable {
     
@@ -30,7 +26,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
     private String selectedGameMusic = "theme.ogg";
     private boolean isInitialized = false;
     
-    // Direct volume and enabled control for when MusicService is null
+    
     private float directMusicVolume = 0.7f;
     private boolean directMusicEnabled = true;
     
@@ -40,9 +36,6 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
     
     private MusicContext currentContext = MusicContext.NONE;
     
-    /**
-     * Represents a music track with metadata
-     */
     public static class MusicTrack {
         public final String fileName;
         public final String displayName;
@@ -78,7 +71,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
     public void initialize() {
         loadAvailableTracks();
         
-        // Load preferences for selected tracks
+        
         loadPreferences();
         
         isInitialized = true;
@@ -109,7 +102,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
             Gdx.app.error("EnhancedMusicService", "Music directory does not exist!");
         }
         
-        // Add a default track if none found
+        
         if (availableTracks.size == 0) {
             Gdx.app.log("EnhancedMusicService", "No tracks found, adding default theme");
             FileHandle defaultTrack = Gdx.files.internal("music/theme.ogg");
@@ -128,7 +121,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
     }
     
     private String getDisplayName(String fileName) {
-        // Convert file names to friendly display names
+        
         StringBuilder result = new StringBuilder();
         String cleaned = fileName.replace("_", " ").replace("-", " ");
         String[] words = cleaned.split(" ");
@@ -168,9 +161,6 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         }
     }
     
-    /**
-     * Switch to menu music context
-     */
     public void switchToMenuMusic() {
         if (!isInitialized) return;
         
@@ -182,9 +172,6 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         }
     }
     
-    /**
-     * Switch to game music context
-     */
     public void switchToGameMusic() {
         if (!isInitialized) return;
         
@@ -196,12 +183,9 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         }
     }
     
-    /**
-     * Stop all music
-     */
     public void stopMusic() {
         currentContext = MusicContext.NONE;
-        // Stop the current music if any is playing
+        
         if (currentMenuTrack != null) {
             Music music = currentMenuTrack.getMusic();
             if (music != null && music.isPlaying()) {
@@ -233,12 +217,12 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         
         Gdx.app.log("EnhancedMusicService", "Attempting to play track: " + track.displayName + " (" + track.fileName + ")");
         
-        // Stop currently playing music first
+        
         stopAllMusic();
         
         Music music = track.getMusic();
         if (music != null) {
-            // Use direct control if MusicService is null, otherwise use MusicService
+            
             boolean musicEnabled = musicService != null ? musicService.isMusicEnabled() : directMusicEnabled;
             float musicVolume = musicService != null ? musicService.getMusicVolume() : directMusicVolume;
             
@@ -259,7 +243,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
     }
     
     private void stopAllMusic() {
-        // Stop all currently playing tracks
+        
         for (MusicTrack track : availableTracks) {
             Music music = track.getMusic();
             if (music != null && music.isPlaying()) {
@@ -268,7 +252,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         }
     }
     
-    // LML Action methods for settings dialog
+    
     
     @LmlAction("getMenuMusicTracks")
     public Array<String> getMenuMusicTracks() {
@@ -283,7 +267,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
     
     @LmlAction("getGameMusicTracks")
     public Array<String> getGameMusicTracks() {
-        return getMenuMusicTracks(); // Same tracks available for both contexts
+        return getMenuMusicTracks(); 
     }
     
     @LmlAction("getCurrentMenuMusic")
@@ -309,7 +293,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
             Gdx.app.log("EnhancedMusicService", "Menu music changed to: " + selectedMenuMusic);
             savePreferences();
             
-            // If we're currently in menu context, switch immediately
+            
             if (currentContext == MusicContext.MENU) {
                 Gdx.app.log("EnhancedMusicService", "Currently in menu context, switching immediately");
                 switchToMenuMusic();
@@ -328,7 +312,7 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
             selectedGameMusic = track.fileName;
             savePreferences();
             
-            // If we're currently in game context, switch immediately
+            
             if (currentContext == MusicContext.GAME) {
                 switchToGameMusic();
             }
@@ -344,9 +328,6 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         return null;
     }
     
-    /**
-     * Get track names formatted for display in dropdowns
-     */
     public Array<String> getTrackDisplayNames() {
         Array<String> names = new Array<>();
         for (MusicTrack track : availableTracks) {
@@ -355,9 +336,6 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         return names;
     }
     
-    /**
-     * Get the currently playing track name
-     */
     public String getCurrentTrackName() {
         if (currentContext == MusicContext.MENU && currentMenuTrack != null) {
             return currentMenuTrack.displayName;
@@ -367,9 +345,6 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         return "None";
     }
     
-    /**
-     * Set music volume (0.0 to 1.0)
-     */
     public void setMusicVolume(float volume) {
         Gdx.app.log("EnhancedMusicService", "setMusicVolume called with: " + volume);
         if (musicService != null) {
@@ -380,20 +355,14 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
             Gdx.app.log("EnhancedMusicService", "Volume set to " + volume + " in direct control");
         }
         
-        // Apply volume to currently playing music immediately
+        
         updateCurrentTrackVolume();
     }
     
-    /**
-     * Get current music volume
-     */
     public float getMusicVolume() {
         return musicService != null ? musicService.getMusicVolume() : directMusicVolume;
     }
     
-    /**
-     * Enable or disable music
-     */
     public void setMusicEnabled(boolean enabled) {
         Gdx.app.log("EnhancedMusicService", "setMusicEnabled called with: " + enabled);
         if (musicService != null) {
@@ -406,43 +375,37 @@ public class EnhancedMusicService implements ActionContainer, Disposable {
         
         if (enabled) {
             Gdx.app.log("EnhancedMusicService", "Music enabled - resuming in context: " + currentContext);
-            // Resume music in current context - force restart even if context is the same
+            
             if (currentContext == MusicContext.MENU) {
-                // Force menu music to start playing
+                
                 MusicTrack track = findTrack(selectedMenuMusic);
                 if (track != null) {
                     currentMenuTrack = track;
                     playTrack(track);
                 }
             } else if (currentContext == MusicContext.GAME) {
-                // Force game music to start playing
+                
                 MusicTrack track = findTrack(selectedGameMusic);
                 if (track != null) {
                     currentGameTrack = track;
                     playTrack(track);
                 }
             } else {
-                // If no context is set, default to menu music
+                
                 Gdx.app.log("EnhancedMusicService", "No context set, defaulting to menu music");
                 switchToMenuMusic();
             }
         } else {
             Gdx.app.log("EnhancedMusicService", "Music disabled - stopping all music");
-            // Stop all music
+            
             stopAllMusic();
         }
     }
     
-    /**
-     * Check if music is enabled
-     */
     public boolean isMusicEnabled() {
         return musicService != null ? musicService.isMusicEnabled() : directMusicEnabled;
     }
     
-    /**
-     * Update the volume of the currently playing track
-     */
     private void updateCurrentTrackVolume() {
         float volume = getMusicVolume();
         Gdx.app.log("EnhancedMusicService", "Updating current track volume to: " + volume);

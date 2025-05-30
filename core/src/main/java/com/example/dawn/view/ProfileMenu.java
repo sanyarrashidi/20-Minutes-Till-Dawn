@@ -101,7 +101,7 @@ public class ProfileMenu extends AppMenu {
         stage.clear();
         Gdx.input.setInputProcessor(stage);
 
-        // Update all labels with current player data
+        
         Player currentPlayer = App.getInstance().getPlayer();
         this.usernameLabel.setText("Username: " + currentPlayer.getUsername());
         this.winsLabel.setText("Wins: " + currentPlayer.getWins().toString());

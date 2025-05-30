@@ -17,18 +17,18 @@ public class GameSummaryController extends Controller {
     }
     
     public void playAgain() {
-        // Reset character for new game (HP, abilities, bonuses)
+        
         if (com.example.dawn.models.App.getInstance().getPlayer() != null && 
             com.example.dawn.models.App.getInstance().getPlayer().getCharacter() != null) {
             com.example.dawn.models.App.getInstance().getPlayer().getCharacter().resetForNewGame();
         }
         
-        // Return to pregame menu to start a new game
+        
         Dawn.getInstance().setScreen(new PregameMenu(new PregameMenuController(databaseManager), GameAssetManager.getInstance().getSkin()));
     }
     
     public void returnToMainMenu() {
-        // Reset character for new game (HP, abilities, bonuses)
+        
         if (com.example.dawn.models.App.getInstance().getPlayer() != null && 
             com.example.dawn.models.App.getInstance().getPlayer().getCharacter() != null) {
             com.example.dawn.models.App.getInstance().getPlayer().getCharacter().resetForNewGame();

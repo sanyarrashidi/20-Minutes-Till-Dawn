@@ -15,24 +15,21 @@ import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.github.czyzby.lml.util.LmlUtilities;
 
-/** This is a settings dialog, which can be shown in any view by using "show:settings" LML action or - in Java code -
- * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
- * will be available in the LML template. */
 @ViewDialog(id = "settings", value = "ui/templates/dialogs/settings.lml", cacheInstance = true)
 public class SettingsController implements ActionContainer {
     @Inject private FullscreenService fullscreenService;
     @Inject private com.example.dawn.service.EnhancedMusicService enhancedMusicService;
     @Inject private MusicService musicService;
 
-    /** @return array of serialized display modes' names. */
+    
     @LmlAction("displayModes")
     public Array<String> getDisplayModes() {
-        final ObjectSet<String> alreadyAdded = GdxSets.newSet(); // Removes duplicates.
-        final Array<String> displayModes = GdxArrays.newArray(); // Keeps display modes sorted.
+        final ObjectSet<String> alreadyAdded = GdxSets.newSet(); 
+        final Array<String> displayModes = GdxArrays.newArray(); 
         for (final DisplayMode mode : fullscreenService.getDisplayModes()) {
             final String modeName = fullscreenService.serialize(mode);
             if (alreadyAdded.contains(modeName)) {
-                continue; // Same size already added.
+                continue; 
             }
             displayModes.add(modeName);
             alreadyAdded.add(modeName);
@@ -40,7 +37,7 @@ public class SettingsController implements ActionContainer {
         return displayModes;
     }
 
-    /** @param actor its ID must match name of a display mode. */
+    
     @LmlAction("setFullscreen")
     public void setFullscreenMode(final Actor actor) {
         final String modeName = LmlUtilities.getActorId(actor);
@@ -48,15 +45,15 @@ public class SettingsController implements ActionContainer {
         fullscreenService.setFullscreen(mode);
     }
 
-    /** Attempts to return to the original window size. */
+    
     @LmlAction("resetFullscreen")
     public void setWindowedMode() {
         fullscreenService.resetFullscreen();
     }
     
-    // Enhanced Music Service LML Actions
     
-    /** @return array of available menu music track names. */
+    
+    
     @LmlAction("getMenuMusicTracks")
     public Array<String> getMenuMusicTracks() {
         if (enhancedMusicService == null) {
@@ -70,7 +67,7 @@ public class SettingsController implements ActionContainer {
         return tracks;
     }
     
-    /** @return array of available game music track names. */
+    
     @LmlAction("getGameMusicTracks")
     public Array<String> getGameMusicTracks() {
         if (enhancedMusicService == null) {
@@ -84,7 +81,7 @@ public class SettingsController implements ActionContainer {
         return tracks;
     }
     
-    /** @return currently selected menu music track name. */
+    
     @LmlAction("getCurrentMenuMusic")
     public String getCurrentMenuMusic() {
         if (enhancedMusicService == null) {
@@ -96,7 +93,7 @@ public class SettingsController implements ActionContainer {
         return current;
     }
     
-    /** @return currently selected game music track name. */
+    
     @LmlAction("getCurrentGameMusic")
     public String getCurrentGameMusic() {
         if (enhancedMusicService == null) {
@@ -108,13 +105,13 @@ public class SettingsController implements ActionContainer {
         return current;
     }
     
-    /** Sets the menu music track. */
+    
     @LmlAction("setMenuMusic")
     public void setMenuMusic(String displayName) {
         enhancedMusicService.setMenuMusic(displayName);
     }
     
-    /** Sets the game music track. */
+    
     @LmlAction("setGameMusic")
     public void setGameMusic(String displayName) {
         enhancedMusicService.setGameMusic(displayName);

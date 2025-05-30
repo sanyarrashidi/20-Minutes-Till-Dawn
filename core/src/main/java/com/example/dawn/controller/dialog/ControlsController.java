@@ -17,14 +17,14 @@ import com.example.dawn.configuration.Configuration;
 import com.example.dawn.service.ControlsService;
 import com.example.dawn.service.controls.Control;
 
-/** Allows to set up player controls. */
+
 @ViewDialog(id = "controls", value = "ui/templates/dialogs/controls.lml", cacheInstance = true)
 public class ControlsController implements ActionContainer, ViewDialogShower {
     @Inject ControlsService service;
     @Inject ControlsEditController controlsEdit;
     @Inject ControlsSwitchController controlsSwitch;
     @Inject InterfaceService interfaceService;
-    /** Controller edition buttons mapped by their in-view IDs. */
+    
     @LmlActor("edit[0," + (Configuration.PLAYERS_AMOUNT - 1) + "]") private ObjectMap<String, Button> editButtons;
 
     @Override
@@ -35,8 +35,6 @@ public class ControlsController implements ActionContainer, ViewDialogShower {
         }
     }
 
-    /** @param control belongs to the player. Should be called after the control is switched.
-     * @param playerId ID of the player to refresh. */
     public void refreshPlayerView(final int playerId, final Control control) {
         final String editId = "edit" + playerId;
         if (control.isActive()) {

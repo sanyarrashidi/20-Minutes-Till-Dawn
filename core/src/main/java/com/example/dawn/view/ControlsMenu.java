@@ -18,11 +18,11 @@ public class ControlsMenu extends AppMenu {
     private final Skin skin;
     private final ControlsMenuController controlsController;
     
-    // UI Components
+    
     private final Label titleLabel;
     private final Label statusLabel;
     
-    // Control setting buttons
+    
     private final TextButton moveUpButton;
     private final TextButton moveDownButton;
     private final TextButton moveLeftButton;
@@ -34,7 +34,7 @@ public class ControlsMenu extends AppMenu {
     private final TextButton resetDefaultsButton;
     private final TextButton backButton;
     
-    // Current control values
+    
     private int currentMoveUp;
     private int currentMoveDown;
     private int currentMoveLeft;
@@ -43,7 +43,7 @@ public class ControlsMenu extends AppMenu {
     private int currentShoot;
     private int currentSprint;
     
-    // Control capture state
+    
     private TextButton waitingForInput = null;
     
     public ControlsMenu(ControlsMenuController controller, Skin skin) {
@@ -58,7 +58,7 @@ public class ControlsMenu extends AppMenu {
         this.statusLabel = new Label("Click on a control to change it, then press the desired key", skin);
         this.statusLabel.setColor(Color.WHITE);
         
-        // Control buttons
+        
         this.moveUpButton = new TextButton("Move Up: W", skin);
         this.moveDownButton = new TextButton("Move Down: S", skin);
         this.moveLeftButton = new TextButton("Move Left: A", skin);
@@ -70,7 +70,7 @@ public class ControlsMenu extends AppMenu {
         this.resetDefaultsButton = new TextButton("Reset to Defaults", skin);
         this.backButton = new TextButton("Back", skin);
         
-        // Initialize current controls
+        
         loadCurrentControls();
     }
     
@@ -83,17 +83,17 @@ public class ControlsMenu extends AppMenu {
         mainTable.setFillParent(true);
         mainTable.center();
         
-        // Title
+        
         titleLabel.setFontScale(1.8f);
         mainTable.add(titleLabel).colspan(2).center().padBottom(40);
         mainTable.row();
         
-        // Status label
+        
         statusLabel.setFontScale(1.0f);
         mainTable.add(statusLabel).colspan(2).center().padBottom(30);
         mainTable.row();
         
-        // Control buttons
+        
         addControlRow(mainTable, "Movement Controls:", null);
         addControlRow(mainTable, null, moveUpButton);
         addControlRow(mainTable, null, moveDownButton);
@@ -105,7 +105,7 @@ public class ControlsMenu extends AppMenu {
         addControlRow(mainTable, null, shootButton);
         addControlRow(mainTable, null, sprintButton);
         
-        // Action buttons
+        
         mainTable.add(new Label("", skin)).colspan(2).padTop(30);
         mainTable.row();
         
@@ -159,7 +159,7 @@ public class ControlsMenu extends AppMenu {
     }
     
     private void setupListeners() {
-        // Control button listeners
+        
         setupControlButton(moveUpButton, "Move Up");
         setupControlButton(moveDownButton, "Move Down");
         setupControlButton(moveLeftButton, "Move Left");
@@ -197,7 +197,7 @@ public class ControlsMenu extends AppMenu {
         statusLabel.setText("Press a key for " + controlName + " (ESC to cancel)");
         statusLabel.setColor(Color.YELLOW);
         
-        // Override input processor to capture key input
+        
         stage.setKeyboardFocus(null);
         Gdx.input.setInputProcessor(new com.badlogic.gdx.InputAdapter() {
             @Override
@@ -236,7 +236,7 @@ public class ControlsMenu extends AppMenu {
         waitingForInput = null;
         Gdx.input.setInputProcessor(stage);
         
-        // Reset status after a delay
+        
         stage.addAction(com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence(
             com.badlogic.gdx.scenes.scene2d.actions.Actions.delay(2f),
             com.badlogic.gdx.scenes.scene2d.actions.Actions.run(() -> {

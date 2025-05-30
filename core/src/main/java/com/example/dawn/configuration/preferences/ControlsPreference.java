@@ -13,7 +13,7 @@ import com.example.dawn.service.controls.ControlType;
 import com.example.dawn.service.controls.impl.KeyboardControl;
 import com.example.dawn.service.controls.impl.TouchControl;
 
-/** Allows to save controls in preferences. */
+
 @Property("Controls")
 public class ControlsPreference extends AbstractPreference<Array<ControlsData>> {
   private final Json json = new Json();
@@ -21,10 +21,10 @@ public class ControlsPreference extends AbstractPreference<Array<ControlsData>> 
     @Override
     public Array<ControlsData> getDefault() {
         final Array<ControlsData> controls = GdxArrays.newArray();
-        // First player defaults to touch (on mobile) or keyboard (on desktop) controls.
+        
         controls.add(GdxUtilities.isMobile() ? new TouchControl().toData() : new KeyboardControl().toData());
         for (int index = 1; index < Configuration.PLAYERS_AMOUNT; index++) {
-            // Other players are simply inactive:
+            
             controls.add(new ControlsData(ControlType.INACTIVE));
         }
         return controls;

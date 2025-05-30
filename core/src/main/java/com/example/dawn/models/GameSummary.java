@@ -14,9 +14,9 @@ public class GameSummary {
     private boolean isWin;
     
     public enum GameEndReason {
-        TIME_UP,        // Player survived the full duration (win)
-        PLAYER_DIED,    // Player's HP reached 0 (loss)
-        GAVE_UP         // Player quit from pause menu (loss)
+        TIME_UP,        
+        PLAYER_DIED,    
+        GAVE_UP         
     }
     
     public GameSummary() {

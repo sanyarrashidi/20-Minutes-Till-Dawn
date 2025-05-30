@@ -79,7 +79,7 @@ public class MainMenu extends AppMenu {
 
         mainTable.add(playerInfoTable).top().left().pad(10);
 
-        // Update all player info with current data
+        
         Player currentPlayer = App.getInstance().getPlayer();
         usernameLabel.setText(currentPlayer.getUsername());
         characterLabel.setText(currentPlayer.getCharacter().getName());
@@ -110,7 +110,7 @@ public class MainMenu extends AppMenu {
         loadGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // load last game
+                
             }
         });
 
@@ -138,7 +138,7 @@ public class MainMenu extends AppMenu {
         hintButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // go to hint menu
+                ((MainMenuController) controller).goToHintMenu();
             }
         });
 

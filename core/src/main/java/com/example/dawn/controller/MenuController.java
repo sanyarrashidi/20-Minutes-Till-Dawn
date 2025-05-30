@@ -12,9 +12,6 @@ import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
-/** Thanks to View annotation, this class will be automatically found and initiated.
- *
- * This is application's main view, displaying a menu with several options. */
 @View(id = "menu", value = "ui/templates/menu.lml")
 public class MenuController implements ActionContainer {
     @Inject private InterfaceService interfaceService;
@@ -24,7 +21,7 @@ public class MenuController implements ActionContainer {
     @LmlAction("startGame")
     public void startPlaying() {
         if (isAnyPlayerActive()) {
-            // Switch to game music when starting the game
+            
             enhancedMusicService.switchToGameMusic();
             interfaceService.show(GameController.class);
         } else {
@@ -34,9 +31,9 @@ public class MenuController implements ActionContainer {
     
     @Initiate
     public void initialize() {
-        // Initialize menu music when the controller is created
+        
         if (enhancedMusicService != null) {
-            // Debug the service
+            
             Array<String> tracks = enhancedMusicService.getTrackDisplayNames();
             Gdx.app.log("MenuController", "Enhanced music service found " + tracks.size + " tracks:");
             for (String track : tracks) {
@@ -49,7 +46,7 @@ public class MenuController implements ActionContainer {
     }
     
     public void show() {
-        // Switch to menu music when showing the menu
+        
         if (enhancedMusicService != null) {
             enhancedMusicService.switchToMenuMusic();
         }

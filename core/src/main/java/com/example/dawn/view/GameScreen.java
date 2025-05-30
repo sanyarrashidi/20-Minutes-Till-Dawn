@@ -48,7 +48,7 @@ public class GameScreen extends AppMenu {
     private OrthographicCamera camera;
     private SpriteBatch batch;
     
-    // Textures
+    
     private Texture tileTexture;
     private Animation<TextureRegion> idleAnimation;
     private Animation<TextureRegion> movingAnimation;
@@ -59,66 +59,71 @@ public class GameScreen extends AppMenu {
     private Texture cursorTexture;
     private Texture avatarTexture;
     
-    // Game state
+    
     private Vector2 playerPosition;
     private Vector2 playerVelocity;
     
-    // Tile system
-    private static final int TILE_SIZE = 96; // Size of each tile in pixels (1.5x bigger)
-    private static final int TILES_PER_SCREEN = 20; // How many tiles to render around the camera
     
-    // Camera following
-    private static final float CAMERA_FOLLOW_AREA = 100f; // Dead zone in the center where camera doesn't move
-    private static final float DEFAULT_PLAYER_SPEED = 300f; // Default player movement speed in pixels per second
+    private static final int TILE_SIZE = 96; 
+    private static final int TILES_PER_SCREEN = 20; 
     
-    // Player controls (will be loaded from player settings)
-    private int moveUpKey = Input.Keys.W; // 51
-    private int moveDownKey = Input.Keys.S; // 47
-    private int moveLeftKey = Input.Keys.A; // 29
-    private int moveRightKey = Input.Keys.D; // 32
     
-    // Animation state
+    private static final float CAMERA_FOLLOW_AREA = 100f; 
+    private static final float DEFAULT_PLAYER_SPEED = 300f; 
+    
+    
+    private int moveUpKey = Input.Keys.W; 
+    private int moveDownKey = Input.Keys.S; 
+    private int moveLeftKey = Input.Keys.A; 
+    private int moveRightKey = Input.Keys.D; 
+    
+    
     private float animationTime = 0f;
     private boolean isMoving = false;
-    private boolean facingLeft = false; // Track which direction character is facing
+    private boolean facingLeft = false; 
     
-    // Weapon and mouse state
+    
     private Vector2 mouseWorldPosition = new Vector2();
     private float weaponRotation = 0f;
     
-    // Bullet system
-    private Array<Bullet> bullets = new Array<>();
-    private int shootKey = Input.Keys.SPACE; // Default shoot key (62)
-    private int reloadKey = Input.Keys.R; // Default reload key (46)
-    private boolean shootKeyPressed = false; // Track shoot key state for single shots
     
-    // Magazine system
-    private int currentAmmo; // Current bullets in magazine
-    private int maxAmmo; // Magazine capacity
+    private Array<Bullet> bullets = new Array<>();
+    private int shootKey = Input.Keys.SPACE; 
+    private int reloadKey = Input.Keys.R; 
+    private boolean shootKeyPressed = false; 
+    
+    
+    private int currentAmmo; 
+    private int maxAmmo; 
     private boolean isReloading = false;
     private float reloadTimer = 0f;
-    private float reloadDuration = 1f; // Default reload time
+    private float reloadDuration = 1f; 
     private boolean autoReload = false;
     private Animation<TextureRegion> reloadAnimation;
     private Array<Texture> reloadTextures;
     private float reloadAnimationTime = 0f;
     
-    // Rapid fire system
-    private float fireRate = 0.2f; // Time between shots (5 shots per second)
+    
+    private float fireRate = 0.2f; 
     private float fireTimer = 0f;
     private boolean canShoot = true;
     
-    // Death animation system
+    
     private Animation<TextureRegion> deathAnimation;
     private Array<Texture> deathTextures;
     private Array<DeathEffect> deathEffects;
     
-    // Player damage animation
+    
     private boolean playerTookDamage = false;
     private float damageAnimationTimer = 0f;
-    private static final float DAMAGE_ANIMATION_DURATION = 0.5f; // Red tint duration
+    private static final float DAMAGE_ANIMATION_DURATION = 0.5f; 
     
-    // Death effect class
+    
+    private boolean playerImmune = false;
+    private float immunityTimer = 0f;
+    private static final float IMMUNITY_DURATION = 2.0f; 
+    
+    
     private static class DeathEffect {
         Vector2 position;
         float animationTime;
@@ -139,55 +144,56 @@ public class GameScreen extends AppMenu {
         }
     }
     
-    // UI elements
+    
     private BitmapFont font;
-    private BitmapFont timerFont; // Large font for the timer
+    private BitmapFont timerFont; 
     private ShapeRenderer shapeRenderer;
+    
     private OrthographicCamera uiCamera;
     
-    // Pause menu elements
+    
     private Table pauseMenuTable;
     private boolean pauseMenuVisible = false;
     
-    // Timer system
-    private float gameTimeRemaining; // in seconds
+    
+    private float gameTimeRemaining; 
     private boolean gameEnded = false;
     private boolean gamePaused = false;
     
-    // Game scoring and tracking system
-    private int gameStartKills = 0; // Kills at start of game
-    private int gameStartScore = 0; // Score at start of game
-    private int gameStartXp = 0; // XP at start of game
-    private int lastKnownLevel = 1; // Track level for level-up detection
     
-    // Enemy system
+    private int gameStartKills = 0; 
+    private int gameStartScore = 0; 
+    private int gameStartXp = 0; 
+    private int lastKnownLevel = 1; 
+    
+    
     private Array<Enemy> enemies;
-    private static final float PLAYER_COLLISION_RADIUS = 32f; // Player collision radius
-    private static final int TREE_MONSTERS_PER_AREA = 1; // Reduced from 2 to 1 tree per area
-    private static final float ENEMY_SPAWN_DISTANCE = 200f; // Minimum distance from player to spawn enemies
+    private static final float PLAYER_COLLISION_RADIUS = 32f; 
+    private static final int TREE_MONSTERS_PER_AREA = 1; 
+    private static final float ENEMY_SPAWN_DISTANCE = 200f; 
     
-    // Tentacle spawning system
+    
     private float tentacleSpawnTimer = 0f;
-    private static final float TENTACLE_SPAWN_INTERVAL = 3f; // Spawn every 3 seconds
+    private static final float TENTACLE_SPAWN_INTERVAL = 3f; 
     private float gameElapsedTime = 0f;
     
-    // EyeBat spawning system
+    
     private float eyebatSpawnTimer = 0f;
-    private static final float EYEBAT_SPAWN_INTERVAL = 10f; // Spawn every 10 seconds
+    private static final float EYEBAT_SPAWN_INTERVAL = 10f; 
     private boolean eyebatSpawningStarted = false;
     
-    // Elder boss system
-    private Enemy elder = null; // Using Enemy base class to avoid import issues
+    
+    private Enemy elder = null; 
     private boolean elderSpawned = false;
     private float initialBorderSize;
     private float currentBorderSize;
-    private static final float BORDER_SHRINK_RATE = 50f; // pixels per second
+    private static final float BORDER_SHRINK_RATE = 50f; 
     
-    // Global tree spawning system
+    
     private Array<Vector2> spawnedTreeAreas = new Array<>();
-    private static final float TREE_AREA_SIZE = 800f; // Size of each tree spawning area
+    private static final float TREE_AREA_SIZE = 800f; 
     
-    // Bullet class
+    
     private static class Bullet {
         Vector2 position;
         Vector2 velocity;
@@ -208,13 +214,17 @@ public class GameScreen extends AppMenu {
         }
         
         public boolean isOffScreen(OrthographicCamera camera) {
-            float margin = 100f; // Allow bullets to go slightly off screen before removing
+            float margin = 100f; 
             return position.x < camera.position.x - camera.viewportWidth/2 - margin ||
                    position.x > camera.position.x + camera.viewportWidth/2 + margin ||
                    position.y < camera.position.y - camera.viewportHeight/2 - margin ||
                    position.y > camera.position.y + camera.viewportHeight/2 + margin;
         }
     }
+    
+    
+    
+    
     
     public GameScreen(GameScreenController controller) {
         super(controller);
@@ -223,51 +233,52 @@ public class GameScreen extends AppMenu {
         
         System.out.println("GameScreen: Initializing...");
         
-        // Initialize camera
+        
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         
-        // Initialize batch
+        
         batch = new SpriteBatch();
         
-        // Initialize UI elements
+        
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().setScale(1.2f);
         
-        // Initialize timer font (larger, title-style)
+        
         timerFont = new BitmapFont();
         timerFont.setColor(Color.RED);
-        timerFont.getData().setScale(3.0f); // Much larger for title effect
+        timerFont.getData().setScale(3.0f); 
         
         shapeRenderer = new ShapeRenderer();
+        
         uiCamera = new OrthographicCamera();
         uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         
-        // Initialize timer
-        gameTimeRemaining = gameController.getGameDurationMinutes() * 60f; // Convert minutes to seconds
         
-        // Initialize enemy system
+        gameTimeRemaining = gameController.getGameDurationMinutes() * 60f; 
+        
+        
         enemies = new Array<>();
         
-        // Initialize player position (start at center)
+        
         playerPosition = new Vector2(0, 0);
         playerVelocity = new Vector2();
         
-        // Initialize border system
+        
         initialBorderSize = Math.max(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         currentBorderSize = initialBorderSize;
         
-        // Initialize tree spawning areas
+        
         spawnedTreeAreas = new Array<>();
         
-        // Initialize death effects
+        
         deathEffects = new Array<>();
         
-        // Initialize magazine system
+        
         initializeMagazineSystem();
         
-        // Initialize game tracking
+        
         initializeGameTracking();
         
         System.out.println("GameScreen: Loading textures...");
@@ -290,17 +301,17 @@ public class GameScreen extends AppMenu {
         if (player != null && player.getCharacter() != null && player.getCharacter().getWeapon() != null) {
             Weapon weapon = player.getCharacter().getWeapon();
             maxAmmo = weapon.getMagazineSize() != null ? weapon.getMagazineSize() : 6;
-            // Add bonus ammo from AMOCREASE ability
+            
             maxAmmo += player.getCharacter().getBonusMaxAmmo();
             reloadDuration = weapon.getReloadTime() != null ? weapon.getReloadTime() : 1f;
             autoReload = player.getAutoReload() != null ? player.getAutoReload() : false;
         } else {
-            maxAmmo = 6; // Default magazine size
-            reloadDuration = 1f; // Default reload time
+            maxAmmo = 6; 
+            reloadDuration = 1f; 
             autoReload = false;
         }
         
-        currentAmmo = maxAmmo; // Start with full magazine
+        currentAmmo = maxAmmo; 
         isReloading = false;
         reloadTimer = 0f;
         fireTimer = 0f;
@@ -324,11 +335,11 @@ public class GameScreen extends AppMenu {
         gamePaused = !gamePaused;
         if (gamePaused) {
             System.out.println("Game paused");
-            // Show pause menu
+            
             showPauseMenu();
         } else {
             System.out.println("Game resumed");
-            // Hide pause menu
+            
             hidePauseMenu();
         }
     }
@@ -336,7 +347,7 @@ public class GameScreen extends AppMenu {
     private void showPauseMenu() {
         pauseMenuVisible = true;
         createPauseMenu();
-        // Set input processor to stage for pause menu interaction
+        
         Gdx.input.setInputProcessor(stage);
     }
     
@@ -346,7 +357,7 @@ public class GameScreen extends AppMenu {
             pauseMenuTable.remove();
             pauseMenuTable = null;
         }
-        // Return input processor to null for game controls
+        
         Gdx.input.setInputProcessor(null);
     }
     
@@ -358,26 +369,26 @@ public class GameScreen extends AppMenu {
         pauseMenuTable = new Table();
         pauseMenuTable.setFillParent(true);
         
-        // Create main content table
+        
         Table contentTable = new Table();
         contentTable.setBackground(GameAssetManager.getInstance().getSkin().getDrawable("window"));
         contentTable.pad(30);
         
-        // Title
+        
         Label titleLabel = new Label("GAME PAUSED", GameAssetManager.getInstance().getSkin());
         titleLabel.setFontScale(2.0f);
         titleLabel.setColor(Color.YELLOW);
         contentTable.add(titleLabel).colspan(2).center().padBottom(30);
         contentTable.row();
         
-        // Create two columns: left for buttons, right for info
+        
         Table leftColumn = new Table();
         Table rightColumn = new Table();
         
-        // Left column - Action buttons
+        
         createActionButtons(leftColumn);
         
-        // Right column - Information panels
+        
         createInfoPanels(rightColumn);
         
         contentTable.add(leftColumn).width(300).top().padRight(20);
@@ -388,19 +399,19 @@ public class GameScreen extends AppMenu {
     }
     
     private void createActionButtons(Table leftColumn) {
-        // Resume Game button
+        
         TextButton resumeButton = new TextButton("Resume Game", GameAssetManager.getInstance().getSkin());
         resumeButton.getLabel().setFontScale(1.3f);
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                togglePause(); // This will resume the game
+                togglePause(); 
             }
         });
         leftColumn.add(resumeButton).width(250).height(60).padBottom(15);
         leftColumn.row();
         
-        // Give Up button
+        
         TextButton giveUpButton = new TextButton("Give Up", GameAssetManager.getInstance().getSkin());
         giveUpButton.getLabel().setFontScale(1.3f);
         giveUpButton.addListener(new ClickListener() {
@@ -414,10 +425,10 @@ public class GameScreen extends AppMenu {
     }
     
     private void createInfoPanels(Table rightColumn) {
-        // Current Abilities panel
+        
         createAbilitiesPanel(rightColumn);
         
-        // Cheat Codes panel
+        
         createCheatCodesPanel(rightColumn);
     }
     
@@ -435,7 +446,7 @@ public class GameScreen extends AppMenu {
         abilitiesTable.add(abilitiesTitle).center().padBottom(15);
         abilitiesTable.row();
         
-        // Active abilities
+        
         List<com.example.dawn.models.ActiveAbility> activeAbilities = player.getCharacter().getActiveAbilities();
         if (!activeAbilities.isEmpty()) {
             Label activeTitle = new Label("Active:", GameAssetManager.getInstance().getSkin());
@@ -454,7 +465,7 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // Permanent abilities
+        
         List<Ability> permanentAbilities = player.getCharacter().getPermanentAbilities();
         if (!permanentAbilities.isEmpty()) {
             Label permanentTitle = new Label("Permanent:", GameAssetManager.getInstance().getSkin());
@@ -495,7 +506,7 @@ public class GameScreen extends AppMenu {
         cheatTable.add(cheatTitle).center().padBottom(15);
         cheatTable.row();
         
-        // Create scrollable content for cheat codes
+        
         Table cheatContent = new Table();
         
         String[] cheatCodes = {
@@ -524,16 +535,16 @@ public class GameScreen extends AppMenu {
     }
     
     private void renderPauseOverlay() {
-        // Draw semi-transparent background overlay
+        
         shapeRenderer.setProjectionMatrix(uiCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.5f); // Semi-transparent black
+        shapeRenderer.setColor(0, 0, 0, 0.5f); 
         shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shapeRenderer.end();
     }
     
     private void giveUp() {
-        // Player chose to give up from pause menu
+        
         if (!gameEnded) {
             gameEnded = true;
             endGameWithSummary(GameSummary.GameEndReason.GAVE_UP, false);
@@ -541,28 +552,28 @@ public class GameScreen extends AppMenu {
     }
     
     private void loadTextures() {
-        // Load tile texture
+        
         tileTexture = new Texture(Gdx.files.internal("textures/T_TileGrass.png"));
         
-        // Initialize texture arrays
+        
         idleTextures = new Array<>();
         movingTextures = new Array<>();
         reloadTextures = new Array<>();
         deathTextures = new Array<>();
         
-        // Load player animations from character
+        
         Player player = App.getInstance().getPlayer();
         
         if (player != null && player.getCharacter() != null) {
             System.out.println("Loading animations for character: " + player.getCharacter().getName());
             
-            // Load idle animation textures
+            
             if (player.getCharacter().getStillImagePaths() != null && 
                 !player.getCharacter().getStillImagePaths().isEmpty()) {
                 
                 for (String imagePath : player.getCharacter().getStillImagePaths()) {
                     if (imagePath != null && !imagePath.isEmpty()) {
-                        // Try the path as-is first, then try with case correction
+                        
                         String[] pathsToTry = {
                             imagePath,
                             imagePath.replace("idle_", "Idle_"),
@@ -578,7 +589,7 @@ public class GameScreen extends AppMenu {
                                 loaded = true;
                                 break;
                             } catch (Exception e) {
-                                // Try next path variant
+                                
                             }
                         }
                         
@@ -589,13 +600,13 @@ public class GameScreen extends AppMenu {
                 }
             }
             
-            // Load moving animation textures
+            
             if (player.getCharacter().getMovingImagePaths() != null && 
                 !player.getCharacter().getMovingImagePaths().isEmpty()) {
                 
                 for (String imagePath : player.getCharacter().getMovingImagePaths()) {
                     if (imagePath != null && !imagePath.isEmpty()) {
-                        // Fix case mismatch: convert "Run_" to "Run_" (already correct)
+                        
                         String correctedPath = imagePath.replace("Run_", "Run_");
                         try {
                             Texture texture = new Texture(Gdx.files.internal(correctedPath));
@@ -609,30 +620,30 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // Create animations from loaded textures
+        
         createAnimations();
         
-        // Load weapon texture
+        
         loadWeaponTexture();
         
-        // Load bullet texture
+        
         loadBulletTexture();
         
-        // Load cursor texture
+        
         loadCursorTexture();
         
-        // Load avatar texture
+        
         loadAvatarTexture();
         
-        // Load reload animations
+        
         loadReloadAnimations();
         
-        // Load death animations
+        
         loadDeathAnimations();
     }
     
     private void createAnimations() {
-        // Create idle animation
+        
         if (idleTextures.size > 0) {
             Array<TextureRegion> idleFrames = new Array<>();
             for (Texture texture : idleTextures) {
@@ -641,14 +652,14 @@ public class GameScreen extends AppMenu {
             idleAnimation = new Animation<>(0.15f, idleFrames, Animation.PlayMode.LOOP);
             System.out.println("Created idle animation with " + idleFrames.size + " frames");
         } else {
-            // Fallback: create single frame animation with tile texture
+            
             Array<TextureRegion> fallbackFrames = new Array<>();
             fallbackFrames.add(new TextureRegion(tileTexture));
             idleAnimation = new Animation<>(1f, fallbackFrames, Animation.PlayMode.LOOP);
             System.out.println("Created fallback idle animation");
         }
         
-        // Create moving animation
+        
         if (movingTextures.size > 0) {
             Array<TextureRegion> movingFrames = new Array<>();
             for (Texture texture : movingTextures) {
@@ -657,7 +668,7 @@ public class GameScreen extends AppMenu {
             movingAnimation = new Animation<>(0.1f, movingFrames, Animation.PlayMode.LOOP);
             System.out.println("Created moving animation with " + movingFrames.size + " frames");
         } else {
-            // Fallback: use idle animation for moving
+            
             movingAnimation = idleAnimation;
             System.out.println("Using idle animation as fallback for moving animation");
         }
@@ -679,7 +690,7 @@ public class GameScreen extends AppMenu {
     
     private void loadWeaponTexture() {
         Player player = App.getInstance().getPlayer();
-        String weaponTexturePath = "textures/T_TileGrass.png"; // Default fallback
+        String weaponTexturePath = "textures/T_TileGrass.png"; 
         
         if (player != null && player.getCharacter() != null && 
             player.getCharacter().getWeapon() != null) {
@@ -722,7 +733,7 @@ public class GameScreen extends AppMenu {
     
     private void loadAvatarTexture() {
         Player player = App.getInstance().getPlayer();
-        String avatarTexturePath = "textures/T_TileGrass.png"; // Default fallback
+        String avatarTexturePath = "textures/T_TileGrass.png"; 
         
         if (player != null && player.getCharacter() != null) {
             String characterName = player.getCharacter().getName();
@@ -744,13 +755,13 @@ public class GameScreen extends AppMenu {
     private void setupCustomCursor() {
         if (cursorTexture != null) {
             try {
-                // Get the texture data as a Pixmap
+                
                 if (!cursorTexture.getTextureData().isPrepared()) {
                     cursorTexture.getTextureData().prepare();
                 }
                 Pixmap pixmap = cursorTexture.getTextureData().consumePixmap();
                 
-                // Create cursor with hotspot at center
+                
                 Cursor cursor = Gdx.graphics.newCursor(pixmap, pixmap.getWidth()/2, pixmap.getHeight()/2);
                 Gdx.graphics.setCursor(cursor);
                 
@@ -762,15 +773,15 @@ public class GameScreen extends AppMenu {
     }
     
     private void spawnInitialEnemies() {
-        // Spawn tree monsters around the player's starting area
-        for (int i = 0; i < TREE_MONSTERS_PER_AREA * 4; i++) { // Spawn in 4 directions around player
+        
+        for (int i = 0; i < TREE_MONSTERS_PER_AREA * 4; i++) { 
             float angle = MathUtils.random(0f, 360f);
             float distance = MathUtils.random(ENEMY_SPAWN_DISTANCE, ENEMY_SPAWN_DISTANCE * 2f);
             
             float x = playerPosition.x + MathUtils.cosDeg(angle) * distance;
             float y = playerPosition.y + MathUtils.sinDeg(angle) * distance;
             
-            // Snap to tile grid for better placement
+            
             x = Math.round(x / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2f;
             y = Math.round(y / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2f;
             
@@ -785,11 +796,11 @@ public class GameScreen extends AppMenu {
 
     @Override
     public void show() {
-        // Don't set input processor to stage for game controls
-        // Gdx.input.setInputProcessor(stage);
-        Gdx.input.setInputProcessor(null); // Use direct input polling instead
         
-        // Start game music
+        
+        Gdx.input.setInputProcessor(null); 
+        
+        
         if (Dawn.getEnhancedMusicService() != null) {
             Dawn.getEnhancedMusicService().switchToGameMusic();
         }
@@ -797,104 +808,107 @@ public class GameScreen extends AppMenu {
 
     @Override
     public void render(float delta) {
-        // Clear screen
+        
         Gdx.gl.glClearColor(0.2f, 0.3f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        // Always handle input (for pause/unpause)
+        
         handleInput(delta);
         
-        // Only update game logic if not paused
+        
         if (!gamePaused) {
-            // Update timer
+            
             updateTimer(delta);
             
-            // Update magazine system
+            
             updateMagazineSystem(delta);
             
-            // Update game elapsed time and enemy spawning
+            
             gameElapsedTime += delta;
             updateTentacleSpawning(delta);
             updateEyeBatSpawning(delta);
             updateElderSpawning(delta);
             updateGlobalTreeSpawning();
             
-            // Update mouse world position
+            
             updateMouseWorldPosition();
             
-            // Update player
+            
             updatePlayer(delta);
             updateCamera();
             
-            // Update bullets
+            
             updateBullets(delta);
             
-            // Update enemies
+            
             updateEnemies(delta);
             
-            // Update death effects
+            
             updateDeathEffects(delta);
             
-            // Update player damage animation
+            
             updatePlayerDamageAnimation(delta);
             
-            // Update abilities and check for level-ups
+            
+            updatePlayerImmunity(delta);
+            
+            
             updateAbilities(delta);
             
-            // Check collisions
+            
             checkCollisions();
             
-            // Update animation time
+            
             animationTime += delta;
             
-            // Update weapon rotation to point towards mouse
+            
             updateWeaponRotation();
         }
         
-        // Set camera
+        
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         
-        // Render
+        
         batch.begin();
         renderTiles();
         renderEnemies();
-        renderDeathEffects(); // Render death effects
-        renderEyeBatBullets(); // Render enemy bullets
+        renderDeathEffects(); 
+        renderEyeBatBullets();
         renderPlayer();
         renderWeapon();
-        renderBullets(); // Render player bullets
+        renderBullets(); 
         batch.end();
         
-        // Render border if Elder is active
+        
         if (elder != null && elder.isActive()) {
             renderBorder();
         }
         
-        // Render UI
+        
         renderUI();
         
-        // Render pause overlay if paused
+        
         if (gamePaused && pauseMenuVisible) {
             renderPauseOverlay();
         }
         
-        // Render UI stage
+        
         stage.act(delta);
         stage.draw();
     }
     
     private void handleInput(float delta) {
-        // Check for pause key (ESC)
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             togglePause();
-            return; // Don't process other input when pausing
+            return; 
         }
         
-        // Handle cheat codes (work even when paused)
+        
         handleCheatCodes();
         
-        // Don't process game input if paused
+        
         if (gamePaused) {
             return;
         }
@@ -902,7 +916,7 @@ public class GameScreen extends AppMenu {
         playerVelocity.set(0, 0);
         boolean anyKeyPressed = false;
         
-        // Check movement keys
+        
         if (Gdx.input.isKeyPressed(moveUpKey)) {
             playerVelocity.y += 1;
             anyKeyPressed = true;
@@ -914,30 +928,30 @@ public class GameScreen extends AppMenu {
         if (Gdx.input.isKeyPressed(moveLeftKey)) {
             playerVelocity.x -= 1;
             anyKeyPressed = true;
-            facingLeft = true; // Character faces left when moving left
+            facingLeft = true; 
         }
         if (Gdx.input.isKeyPressed(moveRightKey)) {
             playerVelocity.x += 1;
             anyKeyPressed = true;
-            facingLeft = false; // Character faces right when moving right
+            facingLeft = false; 
         }
         
-        // Update movement state for animation
+        
         isMoving = anyKeyPressed;
         
-        // Normalize diagonal movement
+        
         if (playerVelocity.len() > 0) {
             playerVelocity.nor();
         }
         
-        // Apply speed (use character's speed if available, otherwise default)
-        float baseSpeed = 100f; // Base speed multiplier (pixels per second per speed point)
-        float speedMultiplier = 3f; // Default speed value (like before)
+        
+        float baseSpeed = 100f; 
+        float speedMultiplier = 3f; 
         Player player = App.getInstance().getPlayer();
         if (player != null && player.getCharacter() != null) {
             speedMultiplier = player.getCharacter().getSpeed();
             
-            // Apply SPEEDY ability (double speed)
+            
             if (player.getCharacter().hasActiveAbility(Ability.SPEEDY)) {
                 speedMultiplier *= 2f;
             }
@@ -945,35 +959,35 @@ public class GameScreen extends AppMenu {
         float playerSpeed = baseSpeed * speedMultiplier;
         playerVelocity.scl(playerSpeed * delta);
         
-        // Debug output for movement (reduced frequency)
-        if (anyKeyPressed && Gdx.graphics.getFrameId() % 180 == 0) { // Print every 3 seconds when moving
+        
+        if (anyKeyPressed && Gdx.graphics.getFrameId() % 180 == 0) { 
             System.out.println("Movement - Keys: W:" + moveUpKey + " S:" + moveDownKey + " A:" + moveLeftKey + " D:" + moveRightKey);
             System.out.println("Velocity: (" + playerVelocity.x + ", " + playerVelocity.y + ")");
         }
         
-        // Handle shooting (rapid fire)
+        
         handleShooting(delta);
         
-        // Handle reload
+        
         handleReload();
     }
     
     private void handleShooting(float delta) {
-        // Update fire timer
+        
         fireTimer += delta;
         
-        // Check if we can shoot (not reloading, have ammo, fire rate allows)
+        
         canShoot = !isReloading && currentAmmo > 0 && fireTimer >= fireRate;
         
-        // Handle rapid fire - shoot while key is held
+        
         if (Gdx.input.isKeyPressed(shootKey) && canShoot) {
             shoot();
-            fireTimer = 0f; // Reset fire timer
+            fireTimer = 0f; 
         }
     }
     
     private void handleReload() {
-        // Manual reload with reload key
+        
         if (Gdx.input.isKeyJustPressed(reloadKey) && !isReloading && currentAmmo < maxAmmo) {
             startReload();
         }
@@ -983,13 +997,13 @@ public class GameScreen extends AppMenu {
         Player player = App.getInstance().getPlayer();
         if (player == null || player.getCharacter() == null) return;
         
-        // T - Decrease time by 1 minute
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             gameTimeRemaining = Math.max(0, gameTimeRemaining - 60f);
-            gameElapsedTime += 60f; // Also advance elapsed time to trigger spawning events
+            gameElapsedTime += 60f; 
             System.out.println("CHEAT: Time decreased by 1 minute. Remaining: " + (int)(gameTimeRemaining / 60) + ":" + String.format("%02d", (int)(gameTimeRemaining % 60)));
             
-            // Check Elder spawning after time cheat
+            
             float totalGameTime = gameController.getGameDurationMinutes() * 60f;
             float elderSpawnTime = totalGameTime / 2f;
             if (!elderSpawned && gameElapsedTime >= elderSpawnTime) {
@@ -1000,7 +1014,7 @@ public class GameScreen extends AppMenu {
                 System.out.println("CHEAT: Elder spawned due to time advancement!");
             }
             
-            // Check if time is up after cheat
+            
             if (gameTimeRemaining <= 0 && !gameEnded) {
                 gameTimeRemaining = 0;
                 gameEnded = true;
@@ -1008,12 +1022,12 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // L - Level up player
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             int currentLevel = player.getCharacter().getLevel();
             int newLevel = currentLevel + 1;
             
-            // Calculate XP needed for new level (sum of 20*i for i=1 to newLevel-1)
+            
             int xpForNewLevel = 0;
             for (int i = 1; i < newLevel; i++) {
                 xpForNewLevel += 20 * i;
@@ -1023,10 +1037,10 @@ public class GameScreen extends AppMenu {
             System.out.println("CHEAT: Player leveled up! Level: " + currentLevel + " -> " + newLevel + ", XP set to: " + xpForNewLevel);
         }
         
-        // H - Increase health by 1 (if not full)
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
             int currentHp = player.getCharacter().getHp();
-            int maxHp = player.getCharacter().getInitialHp(); // Use initial HP as max HP
+            int maxHp = player.getCharacter().getInitialHp(); 
             
             if (currentHp < maxHp) {
                 player.getCharacter().setHp(currentHp + 1);
@@ -1036,13 +1050,13 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // B - Summon Elder boss
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             if (!elderSpawned) {
                 spawnElder();
                 elderSpawned = true;
                 
-                // Initialize border system when Elder spawns
+                
                 initialBorderSize = Math.max(camera.viewportWidth, camera.viewportHeight);
                 currentBorderSize = initialBorderSize;
                 
@@ -1052,33 +1066,33 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // K - Kill all enemies
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
             int enemiesKilled = 0;
             for (Enemy enemy : enemies) {
-                if (enemy.isActive() && !(enemy instanceof TreeMonster)) { // Don't kill TreeMonsters
-                    // Create death effect at enemy position
+                if (enemy.isActive() && !(enemy instanceof TreeMonster)) { 
+                    
                     DeathEffect deathEffect = new DeathEffect(enemy.getPosition().x, enemy.getPosition().y);
                     deathEffects.add(deathEffect);
                     
-                    // Calculate score and XP based on enemy's initial HP
+                    
                     int scoreGained = getEnemyInitialHp(enemy);
                     int xpGained = scoreGained / 5;
                     
-                    // Increment kill count, score, and XP
+                    
                     int currentKills = player.getCharacter().getKills();
                     int currentScore = player.getCharacter().getScore();
                     player.getCharacter().setKills(currentKills + 1);
                     player.getCharacter().setScore(currentScore + scoreGained);
                     player.getCharacter().addXp(xpGained);
                     
-                    // Deactivate enemy
+                    
                     enemy.setActive(false);
                     enemiesKilled++;
                 }
             }
             
-            // Also kill elder if active
+            
             if (elder != null && elder.isActive()) {
                 DeathEffect deathEffect = new DeathEffect(elder.getPosition().x, elder.getPosition().y);
                 deathEffects.add(deathEffect);
@@ -1105,20 +1119,20 @@ public class GameScreen extends AppMenu {
             reloadTimer += delta;
             reloadAnimationTime += delta;
             
-            // Check if reload is complete
+            
             if (reloadTimer >= reloadDuration) {
                 completeReload();
             }
         }
         
-        // Auto-reload when magazine is empty
+        
         if (autoReload && currentAmmo <= 0 && !isReloading) {
             startReload();
         }
     }
     
     private void startReload() {
-        if (isReloading) return; // Already reloading
+        if (isReloading) return; 
         
         isReloading = true;
         reloadTimer = 0f;
@@ -1135,57 +1149,57 @@ public class GameScreen extends AppMenu {
     }
     
     private void shoot() {
-        // Check if we can shoot
+        
         if (isReloading || currentAmmo <= 0) {
             return;
         }
         
-        // Get weapon properties
+        
         Player player = App.getInstance().getPlayer();
-        int weaponDamage = 1; // Default damage
-        int projectileCount = 1; // Default projectile count
+        int weaponDamage = 1; 
+        int projectileCount = 1; 
         
         if (player != null && player.getCharacter() != null && player.getCharacter().getWeapon() != null) {
             Weapon weapon = player.getCharacter().getWeapon();
             weaponDamage = weapon.getDamage() != null ? weapon.getDamage() : 1;
             projectileCount = weapon.getProjectile() != null ? weapon.getProjectile() : 1;
             
-            // Apply DAMAGER ability (25% damage boost)
+            
             if (player.getCharacter().hasActiveAbility(Ability.DAMAGER)) {
                 weaponDamage = (int) Math.ceil(weaponDamage * 1.25f);
             }
             
-            // Apply PROCREASE ability (bonus projectiles)
+            
             projectileCount += player.getCharacter().getBonusProjectiles();
         }
         
-        // Calculate bullet spawn position (at weapon tip)
+        
         float weaponOffsetX = facingLeft ? -20f : 20f;
         float weaponOffsetY = 5f;
         float bulletStartX = playerPosition.x + weaponOffsetX;
         float bulletStartY = playerPosition.y + weaponOffsetY;
         
-        // Calculate base direction towards mouse
+        
         float deltaX = mouseWorldPosition.x - bulletStartX;
         float deltaY = mouseWorldPosition.y - bulletStartY;
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         
         if (distance > 0) {
-            // Normalize base direction
+            
             float baseDirX = deltaX / distance;
             float baseDirY = deltaY / distance;
             
-            // Fire multiple projectiles
+            
             for (int i = 0; i < projectileCount; i++) {
-                // Calculate spread for multiple projectiles
+                
                 float spreadAngle = 0f;
                 if (projectileCount > 1) {
-                    // Spread projectiles in a cone (15 degrees total spread)
-                    float maxSpread = 15f; // degrees
+                    
+                    float maxSpread = 15f; 
                     spreadAngle = (i - (projectileCount - 1) / 2f) * (maxSpread / Math.max(1, projectileCount - 1));
                 }
                 
-                // Apply spread to direction
+                
                 float radians = (float) Math.toRadians(spreadAngle);
                 float cos = (float) Math.cos(radians);
                 float sin = (float) Math.sin(radians);
@@ -1193,17 +1207,17 @@ public class GameScreen extends AppMenu {
                 float spreadDirX = baseDirX * cos - baseDirY * sin;
                 float spreadDirY = baseDirX * sin + baseDirY * cos;
                 
-                // Apply bullet speed
-                float bulletSpeed = 500f; // pixels per second
+                
+                float bulletSpeed = 500f; 
                 float velocityX = spreadDirX * bulletSpeed;
                 float velocityY = spreadDirY * bulletSpeed;
                 
-                // Create and add bullet with weapon damage
+                
                 Bullet bullet = new Bullet(bulletStartX, bulletStartY, velocityX, velocityY, weaponRotation, weaponDamage);
                 bullets.add(bullet);
             }
             
-            // Consume ammo (one ammo per shot, regardless of projectile count)
+            
             currentAmmo--;
             
             System.out.println("Shot fired! Projectiles: " + projectileCount + ", Damage: " + weaponDamage + ", Ammo: " + currentAmmo + "/" + maxAmmo);
@@ -1211,52 +1225,52 @@ public class GameScreen extends AppMenu {
     }
     
     private void updatePlayer(float delta) {
-        // Update player position
+        
         playerPosition.add(playerVelocity);
     }
     
     private void updateCamera() {
-        // Get camera center and player position relative to camera
+        
         Vector3 cameraCenter = new Vector3(camera.position);
         float playerRelativeX = playerPosition.x - cameraCenter.x;
         float playerRelativeY = playerPosition.y - cameraCenter.y;
         
-        // Check if player is outside the follow area
+        
         float newCameraX = camera.position.x;
         float newCameraY = camera.position.y;
         
-        // Horizontal camera movement
+        
         if (playerRelativeX > CAMERA_FOLLOW_AREA / 2) {
             newCameraX = playerPosition.x - CAMERA_FOLLOW_AREA / 2;
         } else if (playerRelativeX < -CAMERA_FOLLOW_AREA / 2) {
             newCameraX = playerPosition.x + CAMERA_FOLLOW_AREA / 2;
         }
         
-        // Vertical camera movement
+        
         if (playerRelativeY > CAMERA_FOLLOW_AREA / 2) {
             newCameraY = playerPosition.y - CAMERA_FOLLOW_AREA / 2;
         } else if (playerRelativeY < -CAMERA_FOLLOW_AREA / 2) {
             newCameraY = playerPosition.y + CAMERA_FOLLOW_AREA / 2;
         }
         
-        // Update camera position
+        
         camera.position.set(newCameraX, newCameraY, 0);
     }
     
     private void renderTiles() {
-        // Calculate which tiles to render based on camera position
+        
         float cameraLeft = camera.position.x - camera.viewportWidth / 2;
         float cameraRight = camera.position.x + camera.viewportWidth / 2;
         float cameraBottom = camera.position.y - camera.viewportHeight / 2;
         float cameraTop = camera.position.y + camera.viewportHeight / 2;
         
-        // Convert to tile coordinates
+        
         int startTileX = (int) Math.floor(cameraLeft / TILE_SIZE) - 1;
         int endTileX = (int) Math.ceil(cameraRight / TILE_SIZE) + 1;
         int startTileY = (int) Math.floor(cameraBottom / TILE_SIZE) - 1;
         int endTileY = (int) Math.ceil(cameraTop / TILE_SIZE) + 1;
         
-        // Render tiles
+        
         for (int tileX = startTileX; tileX <= endTileX; tileX++) {
             for (int tileY = startTileY; tileY <= endTileY; tileY++) {
                 float worldX = tileX * TILE_SIZE;
@@ -1275,39 +1289,44 @@ public class GameScreen extends AppMenu {
     }
     
     private void renderPlayer() {
-        // Choose the appropriate animation based on movement state
+        
         Animation<TextureRegion> currentAnimation = isMoving ? movingAnimation : idleAnimation;
         
-        // Get the current frame
+        
         TextureRegion currentFrame = currentAnimation.getKeyFrame(animationTime);
         
-        // Make player larger and more visible
-        float playerSize = 96f; // Make player same size as tiles (1.5x bigger)
+        
+        float playerSize = 96f; 
         float playerRenderX = playerPosition.x - playerSize / 2f;
         float playerRenderY = playerPosition.y - playerSize / 2f;
         
-        // Flip the texture region if facing left
+        
         if (facingLeft && !currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
         } else if (!facingLeft && currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
         }
         
-        // Apply damage tint if player took damage
+        
         if (playerTookDamage) {
-            batch.setColor(1f, 0.3f, 0.3f, 1f); // Red tint
+            batch.setColor(1f, 0.3f, 0.3f, 1f); 
+        } else if (playerImmune) {
+            
+            float flickerSpeed = 10f; 
+            float alpha = (float)(0.5f + 0.5f * Math.sin(immunityTimer * flickerSpeed));
+            batch.setColor(1f, 1f, 1f, alpha); 
         }
         
-        // Render the current animation frame
+        
         batch.draw(currentFrame, playerRenderX, playerRenderY, playerSize, playerSize);
         
-        // Reset color
-        if (playerTookDamage) {
+        
+        if (playerTookDamage || playerImmune) {
             batch.setColor(Color.WHITE);
         }
         
-        // Debug output (reduced frequency)
-        if (Gdx.graphics.getFrameId() % 300 == 0) { // Print every 5 seconds
+        
+        if (Gdx.graphics.getFrameId() % 300 == 0) { 
             System.out.println("Player: (" + (int)playerPosition.x + ", " + (int)playerPosition.y + ") " + (isMoving ? "moving" : "idle"));
         }
     }
@@ -1315,47 +1334,47 @@ public class GameScreen extends AppMenu {
     private void renderWeapon() {
         if (weaponTexture == null) return;
         
-        // Weapon size and position (made bigger)
-        float weaponSize = 48f; // Increased from 32f to 48f (50% bigger)
-        float weaponOffsetX = facingLeft ? -20f : 20f; // Position weapon on the side the character is facing
-        float weaponOffsetY = 5f; // Slightly above center
         
-        // Calculate weapon position relative to player
+        float weaponSize = 48f; 
+        float weaponOffsetX = facingLeft ? -20f : 20f; 
+        float weaponOffsetY = 5f; 
+        
+        
         float weaponX = playerPosition.x + weaponOffsetX;
         float weaponY = playerPosition.y + weaponOffsetY;
         
-        // Choose texture based on reload state
+        
         TextureRegion weaponRegion;
         if (isReloading && reloadAnimation != null) {
-            // Show reload animation
+            
             weaponRegion = reloadAnimation.getKeyFrame(reloadAnimationTime);
         } else {
-            // Show normal weapon texture
+            
             weaponRegion = new TextureRegion(weaponTexture);
         }
         
-        // Render weapon with rotation towards mouse
-        // The origin is set to the center of the weapon for proper rotation
+        
+        
         batch.draw(weaponRegion, 
-                   weaponX - weaponSize/2f, weaponY - weaponSize/2f, // position
-                   weaponSize/2f, weaponSize/2f, // origin (center of weapon)
-                   weaponSize, weaponSize, // size
-                   1f, 1f, // scale
-                   weaponRotation); // rotation
+                   weaponX - weaponSize/2f, weaponY - weaponSize/2f, 
+                   weaponSize/2f, weaponSize/2f, 
+                   weaponSize, weaponSize, 
+                   1f, 1f, 
+                   weaponRotation); 
     }
     
     private void renderBullets() {
         for (Bullet bullet : bullets) {
             if (bullet.active) {
-                float bulletSize = 16f; // Make bullets half the previous size
+                float bulletSize = 16f; 
                 float bulletX = bullet.position.x - bulletSize/2f;
                 float bulletY = bullet.position.y - bulletSize/2f;
                 batch.draw(bulletTexture, bulletX, bulletY, bulletSize, bulletSize);
             }
         }
         
-        // Debug output for bullet count
-        if (Gdx.graphics.getFrameId() % 60 == 0 && bullets.size > 0) { // Print once per second
+        
+        if (Gdx.graphics.getFrameId() % 60 == 0 && bullets.size > 0) { 
             System.out.println("Active bullets: " + bullets.size);
         }
     }
@@ -1366,7 +1385,7 @@ public class GameScreen extends AppMenu {
                 EyeBat eyebat = (EyeBat) enemy;
                 for (EyeBat.EyeBatBullet bullet : eyebat.getBullets()) {
                     if (bullet.active) {
-                        float bulletSize = 12f; // Slightly smaller than player bullets
+                        float bulletSize = 12f; 
                         float bulletX = bullet.position.x - bulletSize/2f;
                         float bulletY = bullet.position.y - bulletSize/2f;
                         batch.draw(bulletTexture, bulletX, bulletY, bulletSize, bulletSize);
@@ -1377,21 +1396,21 @@ public class GameScreen extends AppMenu {
     }
     
     private void renderBorder() {
-        // Set up shape renderer for border
+        
         shapeRenderer.setProjectionMatrix(camera.combined);
         
-        // Calculate border position (centered on camera)
+        
         float borderCenterX = camera.position.x;
         float borderCenterY = camera.position.y;
         float borderRadius = currentBorderSize / 2f;
         
-        // Draw border circle outline
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.circle(borderCenterX, borderCenterY, borderRadius, 64); // 64 segments for smooth circle
+        shapeRenderer.circle(borderCenterX, borderCenterY, borderRadius, 64); 
         shapeRenderer.end();
         
-        // Draw warning area (slightly inside border)
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.ORANGE);
         shapeRenderer.circle(borderCenterX, borderCenterY, borderRadius - 20f, 32);
@@ -1399,33 +1418,33 @@ public class GameScreen extends AppMenu {
     }
     
     private void updateMouseWorldPosition() {
-        // Convert screen coordinates to world coordinates
+        
         Vector3 mouseScreenPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
         Vector3 mouseWorldPos = camera.unproject(mouseScreenPos);
         mouseWorldPosition.set(mouseWorldPos.x, mouseWorldPos.y);
     }
     
     private void updateWeaponRotation() {
-        // Calculate angle from player to mouse
+        
         float deltaX = mouseWorldPosition.x - playerPosition.x;
         float deltaY = mouseWorldPosition.y - playerPosition.y;
         weaponRotation = (float) Math.toDegrees(Math.atan2(deltaY, deltaX));
     }
     
     private void updateBullets(float delta) {
-        // Update bullet positions
+        
         for (Bullet bullet : bullets) {
             if (bullet.active) {
                 bullet.update(delta);
                 
-                // Remove bullets that are off screen
+                
                 if (bullet.isOffScreen(camera)) {
                     bullet.active = false;
                 }
             }
         }
         
-        // Remove inactive bullets using traditional loop
+        
         for (int i = bullets.size - 1; i >= 0; i--) {
             if (!bullets.get(i).active) {
                 bullets.removeIndex(i);
@@ -1437,11 +1456,11 @@ public class GameScreen extends AppMenu {
         if (!gameEnded) {
             gameTimeRemaining -= delta;
             
-            // Check if time is up
+            
             if (gameTimeRemaining <= 0) {
                 gameTimeRemaining = 0;
                 gameEnded = true;
-                // End the game with victory
+                
                 endGameWithSummary(com.example.dawn.models.GameSummary.GameEndReason.TIME_UP, true);
             }
         }
@@ -1450,12 +1469,12 @@ public class GameScreen extends AppMenu {
     private void updateTentacleSpawning(float delta) {
         tentacleSpawnTimer += delta;
         
-        // Check if it's time to spawn tentacles
+        
         if (tentacleSpawnTimer >= TENTACLE_SPAWN_INTERVAL) {
-            tentacleSpawnTimer = 0f; // Reset timer
+            tentacleSpawnTimer = 0f; 
             
-            // Calculate how many tentacles to spawn based on elapsed time
-            // i/30 tentacles where i is seconds elapsed
+            
+            
             int tentaclesToSpawn = Math.max(1, (int)(gameElapsedTime / 30f));
             
             for (int i = 0; i < tentaclesToSpawn; i++) {
@@ -1467,24 +1486,24 @@ public class GameScreen extends AppMenu {
     }
     
     private void spawnTentacleOnScreen() {
-        // Spawn tentacle within current screen bounds
+        
         float screenWidth = camera.viewportWidth;
         float screenHeight = camera.viewportHeight;
         
-        // Get random position within screen bounds
+        
         float x = camera.position.x + MathUtils.random(-screenWidth/2f, screenWidth/2f);
         float y = camera.position.y + MathUtils.random(-screenHeight/2f, screenHeight/2f);
         
-        // Ensure minimum distance from player
+        
         float distanceFromPlayer = playerPosition.dst(x, y);
         if (distanceFromPlayer < ENEMY_SPAWN_DISTANCE) {
-            // Move spawn point away from player
+            
             float angle = MathUtils.atan2(y - playerPosition.y, x - playerPosition.x);
             x = playerPosition.x + MathUtils.cos(angle) * ENEMY_SPAWN_DISTANCE;
             y = playerPosition.y + MathUtils.sin(angle) * ENEMY_SPAWN_DISTANCE;
         }
         
-        // Snap to tile grid for better placement
+        
         x = Math.round(x / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2f;
         y = Math.round(y / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2f;
         
@@ -1495,9 +1514,9 @@ public class GameScreen extends AppMenu {
     }
     
     private void updateEyeBatSpawning(float delta) {
-        // Check if EyeBat spawning should start (after t/4 seconds, where t is total game time)
-        float totalGameTime = gameController.getGameDurationMinutes() * 60f; // Total game time in seconds
-        float spawnStartTime = totalGameTime / 4f; // Start spawning after 1/4 of total game time
+        
+        float totalGameTime = gameController.getGameDurationMinutes() * 60f; 
+        float spawnStartTime = totalGameTime / 4f; 
         
         if (!eyebatSpawningStarted && gameElapsedTime >= spawnStartTime) {
             eyebatSpawningStarted = true;
@@ -1510,15 +1529,15 @@ public class GameScreen extends AppMenu {
         
         eyebatSpawnTimer += delta;
         
-        // Check if it's time to spawn eyebats
+        
         if (eyebatSpawnTimer >= EYEBAT_SPAWN_INTERVAL) {
-            eyebatSpawnTimer = 0f; // Reset timer
+            eyebatSpawnTimer = 0f; 
             
-            // Calculate how many eyebats to spawn: (4i-t+30)/30
-            // where i is the number of 10-second intervals that have passed
+            
+            
             int intervals = (int)(gameElapsedTime / EYEBAT_SPAWN_INTERVAL);
             int formulaResult = (4 * intervals - (int)gameElapsedTime + 30) / 30;
-            int eyebatsToSpawn = Math.max(1, formulaResult); // Ensure at least 1 spawns
+            int eyebatsToSpawn = Math.max(1, formulaResult); 
             
             System.out.println("EyeBat spawn calculation: intervals=" + intervals + ", gameElapsedTime=" + (int)gameElapsedTime + ", formula=" + formulaResult + ", spawning=" + eyebatsToSpawn);
             
@@ -1531,24 +1550,24 @@ public class GameScreen extends AppMenu {
     }
     
     private void spawnEyeBatOnScreen() {
-        // Spawn eyebat within current screen bounds
+        
         float screenWidth = camera.viewportWidth;
         float screenHeight = camera.viewportHeight;
         
-        // Get random position within screen bounds
+        
         float x = camera.position.x + MathUtils.random(-screenWidth/2f, screenWidth/2f);
         float y = camera.position.y + MathUtils.random(-screenHeight/2f, screenHeight/2f);
         
-        // Ensure minimum distance from player
+        
         float distanceFromPlayer = playerPosition.dst(x, y);
         if (distanceFromPlayer < ENEMY_SPAWN_DISTANCE) {
-            // Move spawn point away from player
+            
             float angle = MathUtils.atan2(y - playerPosition.y, x - playerPosition.x);
             x = playerPosition.x + MathUtils.cos(angle) * ENEMY_SPAWN_DISTANCE;
             y = playerPosition.y + MathUtils.sin(angle) * ENEMY_SPAWN_DISTANCE;
         }
         
-        // Snap to tile grid for better placement
+        
         x = Math.round(x / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2f;
         y = Math.round(y / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2f;
         
@@ -1559,12 +1578,12 @@ public class GameScreen extends AppMenu {
     }
     
     private void updateGlobalTreeSpawning() {
-        // Calculate which tree area the player is currently in
+        
         float areaX = Math.round(playerPosition.x / TREE_AREA_SIZE) * TREE_AREA_SIZE;
         float areaY = Math.round(playerPosition.y / TREE_AREA_SIZE) * TREE_AREA_SIZE;
         Vector2 currentArea = new Vector2(areaX, areaY);
         
-        // Check if we've already spawned trees in this area
+        
         boolean areaAlreadySpawned = false;
         for (Vector2 spawnedArea : spawnedTreeAreas) {
             if (spawnedArea.equals(currentArea)) {
@@ -1573,7 +1592,7 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // If not spawned, spawn trees in this area
+        
         if (!areaAlreadySpawned) {
             spawnTreesInArea(areaX, areaY);
             spawnedTreeAreas.add(new Vector2(areaX, areaY));
@@ -1582,22 +1601,22 @@ public class GameScreen extends AppMenu {
     }
     
     private void spawnTreesInArea(float centerX, float centerY) {
-        // Spawn trees randomly within this area
-        int treesToSpawn = TREE_MONSTERS_PER_AREA * 4; // Same as initial spawning
+        
+        int treesToSpawn = TREE_MONSTERS_PER_AREA * 4; 
         
         for (int i = 0; i < treesToSpawn; i++) {
-            // Random position within the area
+            
             float x = centerX + MathUtils.random(-TREE_AREA_SIZE/2f, TREE_AREA_SIZE/2f);
             float y = centerY + MathUtils.random(-TREE_AREA_SIZE/2f, TREE_AREA_SIZE/2f);
             
-            // Ensure minimum distance from player
+            
             float distanceFromPlayer = playerPosition.dst(x, y);
             if (distanceFromPlayer < ENEMY_SPAWN_DISTANCE) {
-                // Skip this tree if too close to player
+                
                 continue;
             }
             
-            // Snap to tile grid for better placement
+            
             x = Math.round(x / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2f;
             y = Math.round(y / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2f;
             
@@ -1607,40 +1626,40 @@ public class GameScreen extends AppMenu {
     }
     
     private void updateElderSpawning(float delta) {
-        // Check if Elder should spawn (at halfway point of total game time)
-        float totalGameTime = gameController.getGameDurationMinutes() * 60f; // Total game time in seconds
-        float elderSpawnTime = totalGameTime / 2f; // Spawn at halfway point
+        
+        float totalGameTime = gameController.getGameDurationMinutes() * 60f; 
+        float elderSpawnTime = totalGameTime / 2f; 
         
         if (!elderSpawned && gameElapsedTime >= elderSpawnTime) {
             spawnElder();
             elderSpawned = true;
             
-            // Initialize border system when Elder spawns
+            
             initialBorderSize = Math.max(camera.viewportWidth, camera.viewportHeight);
             currentBorderSize = initialBorderSize;
             
             System.out.println("Elder spawned at " + gameElapsedTime + " seconds! Border system activated.");
         }
         
-        // Update border shrinking if Elder is alive
+        
         if (elder != null && elder.isActive()) {
             currentBorderSize -= BORDER_SHRINK_RATE * delta;
-            currentBorderSize = Math.max(currentBorderSize, 100f); // Minimum border size
+            currentBorderSize = Math.max(currentBorderSize, 100f); 
             
-            // Check if player is outside border and damage them
+            
             checkBorderCollision();
         }
     }
     
     private void spawnElder() {
-        // Spawn Elder near the player but not too close
+        
         float angle = MathUtils.random(0f, 360f);
-        float distance = ENEMY_SPAWN_DISTANCE * 1.5f; // Spawn further away
+        float distance = ENEMY_SPAWN_DISTANCE * 1.5f; 
         
         float x = playerPosition.x + MathUtils.cosDeg(angle) * distance;
         float y = playerPosition.y + MathUtils.sinDeg(angle) * distance;
         
-        // Create Elder using reflection to avoid import issues
+        
         try {
             Class<?> elderClass = Class.forName("com.example.dawn.entity.Elder");
             elder = (Enemy) elderClass.getConstructor(float.class, float.class).newInstance(x, y);
@@ -1648,62 +1667,71 @@ public class GameScreen extends AppMenu {
             System.out.println("Elder boss spawned at (" + x + ", " + y + ")");
         } catch (Exception e) {
             System.out.println("Failed to spawn Elder: " + e.getMessage());
-            // Fallback: create a tree monster as placeholder
+            
             elder = new TreeMonster(x, y);
             enemies.add(elder);
         }
     }
     
     private void checkBorderCollision() {
-        // Calculate distance from player to center of border (camera center)
+        
         float borderCenterX = camera.position.x;
         float borderCenterY = camera.position.y;
         float distanceFromCenter = playerPosition.dst(borderCenterX, borderCenterY);
         
-        // Check if player is outside the border
+        
         if (distanceFromCenter > currentBorderSize / 2f) {
-            // Damage player
-            Player player = App.getInstance().getPlayer();
-            if (player != null && player.getCharacter() != null) {
-                int currentHp = player.getCharacter().getHp();
-                int newHp = Math.max(0, currentHp - 1);
-                player.getCharacter().setHp(newHp);
-                System.out.println("Player hit border! HP: " + currentHp + " -> " + newHp);
-                
-                // Push player back inside border
-                float pushBackDistance = (currentBorderSize / 2f) - 10f; // Slightly inside border
-                float angle = MathUtils.atan2(playerPosition.y - borderCenterY, playerPosition.x - borderCenterX);
-                playerPosition.x = borderCenterX + MathUtils.cos(angle) * pushBackDistance;
-                playerPosition.y = borderCenterY + MathUtils.sin(angle) * pushBackDistance;
+            
+            if (!playerImmune) {
+                Player player = App.getInstance().getPlayer();
+                if (player != null && player.getCharacter() != null) {
+                    int currentHp = player.getCharacter().getHp();
+                    int newHp = Math.max(0, currentHp - 1);
+                    player.getCharacter().setHp(newHp);
+                    System.out.println("Player hit border! HP: " + currentHp + " -> " + newHp);
+                    
+                    
+                    playerImmune = true;
+                    immunityTimer = 0f;
+                    playerTookDamage = true;
+                    damageAnimationTimer = 0f;
+                    System.out.println("Player took border damage - immunity activated for " + IMMUNITY_DURATION + " seconds");
+                }
             }
+            
+            
+            float pushBackDistance = (currentBorderSize / 2f) - 10f; 
+            float angle = MathUtils.atan2(playerPosition.y - borderCenterY, playerPosition.x - borderCenterX);
+            playerPosition.x = borderCenterX + MathUtils.cos(angle) * pushBackDistance;
+            playerPosition.y = borderCenterY + MathUtils.sin(angle) * pushBackDistance;
         }
     }
     
     private void updateEnemies(float delta) {
         for (Enemy enemy : enemies) {
             if (enemy.isActive()) {
-                // Update tentacle monster target position
+                
                 if (enemy instanceof TentacleMonster) {
                     ((TentacleMonster) enemy).setTargetPosition(playerPosition);
                 }
-                // Update eyebat target position
+                
                 if (enemy instanceof EyeBat) {
                     ((EyeBat) enemy).setTargetPosition(playerPosition);
                 }
-                // Update elder target position
+                
                 if (enemy == elder && elder != null) {
                     try {
-                        // Use reflection to call setTargetPosition
+                        
                         elder.getClass().getMethod("setTargetPosition", Vector2.class).invoke(elder, playerPosition);
                     } catch (Exception e) {
-                        // Ignore reflection errors
+                        
                     }
                 }
                 enemy.update(delta);
             }
         }
         
-        // Remove inactive enemies
+        
         for (int i = enemies.size - 1; i >= 0; i--) {
             if (!enemies.get(i).isActive()) {
                 enemies.removeIndex(i);
@@ -1712,15 +1740,18 @@ public class GameScreen extends AppMenu {
     }
     
     private void checkCollisions() {
-        // Check player collision with enemies
+        
         for (Enemy enemy : enemies) {
-            if (enemy.isActive() && enemy.collidesWith(playerPosition, PLAYER_COLLISION_RADIUS)) {
+            if (enemy.isActive() && !playerImmune && enemy.collidesWith(playerPosition, PLAYER_COLLISION_RADIUS)) {
                 enemy.onPlayerCollision();
-                // Trigger player damage animation
+                
                 playerTookDamage = true;
                 damageAnimationTimer = 0f;
+                playerImmune = true;
+                immunityTimer = 0f;
+                System.out.println("Player took damage - immunity activated for " + IMMUNITY_DURATION + " seconds");
                 
-                // Check if player died after collision
+                
                 Player player = App.getInstance().getPlayer();
                 if (player != null && player.getCharacter() != null && player.getCharacter().getHp() <= 0) {
                     System.out.println("Player died from enemy collision!");
@@ -1732,28 +1763,32 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // Check player bullet collision with enemies
+        
         for (int i = bullets.size - 1; i >= 0; i--) {
             Bullet bullet = bullets.get(i);
             if (!bullet.active) continue;
             
             for (Enemy enemy : enemies) {
-                if (enemy.isActive() && enemy.collidesWith(bullet.position, 8f)) { // Small bullet radius
+                if (enemy.isActive() && enemy.collidesWith(bullet.position, 8f)) { 
                     int enemyHpBefore = enemy.getHp();
-                    enemy.takeDamage(bullet.damage); // Apply bullet damage
-                    bullet.active = false; // Bullet is consumed
                     
-                    // Check if enemy died and create death effect
+                    
+                    applyKnockback(enemy, bullet.position, bullet.damage);
+                    
+                    enemy.takeDamage(bullet.damage); 
+                    bullet.active = false; 
+                    
+                    
                     if (!enemy.isActive() && enemyHpBefore > 0) {
-                        // Create death effect at enemy position
+                        
                         DeathEffect deathEffect = new DeathEffect(enemy.getPosition().x, enemy.getPosition().y);
                         deathEffects.add(deathEffect);
                         
-                        // Calculate score and XP based on enemy's initial HP
-                        int scoreGained = getEnemyInitialHp(enemy);
-                        int xpGained = scoreGained / 5; // XP is 1/5 of score gained
                         
-                        // Increment kill count, score, and XP
+                        int scoreGained = getEnemyInitialHp(enemy);
+                        int xpGained = scoreGained / 5; 
+                        
+                        
                         Player player = App.getInstance().getPlayer();
                         if (player != null && player.getCharacter() != null) {
                             int currentKills = player.getCharacter().getKills();
@@ -1765,12 +1800,12 @@ public class GameScreen extends AppMenu {
                         }
                     }
                     
-                    break; // One bullet can only hit one enemy
+                    break; 
                 }
             }
         }
         
-        // Check EyeBat bullet collision with player
+        
         for (Enemy enemy : enemies) {
             if (enemy instanceof EyeBat && enemy.isActive()) {
                 EyeBat eyebat = (EyeBat) enemy;
@@ -1778,18 +1813,21 @@ public class GameScreen extends AppMenu {
                     EyeBat.EyeBatBullet bullet = eyebat.getBullets().get(i);
                     if (bullet.active) {
                         float distance = playerPosition.dst(bullet.position);
-                        if (distance < PLAYER_COLLISION_RADIUS + 6f) { // Player radius + bullet radius
-                            // EyeBat bullet hit player (fixed damage of 1)
+                        if (distance < PLAYER_COLLISION_RADIUS + 6f && !playerImmune) { 
+                            
                             Player player = App.getInstance().getPlayer();
                             if (player != null && player.getCharacter() != null) {
                                 int currentHp = player.getCharacter().getHp();
-                                int newHp = Math.max(0, currentHp - 1); // EyeBat bullets do 1 damage
+                                int newHp = Math.max(0, currentHp - 1); 
                                 player.getCharacter().setHp(newHp);
                                 System.out.println("Player hit by EyeBat bullet! HP: " + currentHp + " -> " + newHp);
                                 
-                                // Trigger player damage animation
+                                
                                 playerTookDamage = true;
                                 damageAnimationTimer = 0f;
+                                playerImmune = true;
+                                immunityTimer = 0f;
+                                System.out.println("Player took damage - immunity activated for " + IMMUNITY_DURATION + " seconds");
                                 
                                 if (newHp <= 0) {
                                     System.out.println("Player died from EyeBat bullet!");
@@ -1799,10 +1837,10 @@ public class GameScreen extends AppMenu {
                                     }
                                 }
                             }
-                            bullet.active = false; // Remove bullet
+                            bullet.active = false; 
                         }
                         
-                        // Remove bullets that are off screen
+                        
                         if (bullet.isOffScreen(camera.position.x, camera.position.y, camera.viewportWidth, camera.viewportHeight)) {
                             bullet.active = false;
                         }
@@ -1813,17 +1851,17 @@ public class GameScreen extends AppMenu {
     }
     
     private int getEnemyInitialHp(Enemy enemy) {
-        // Return the initial HP of different enemy types for scoring
+        
         if (enemy instanceof TentacleMonster) {
-            return 25; // TentacleMonster initial HP
+            return 25; 
         } else if (enemy instanceof EyeBat) {
-            return 50; // EyeBat initial HP
+            return 50; 
         } else if (enemy instanceof Elder) {
-            return 400; // Elder initial HP
+            return 400; 
         } else if (enemy instanceof TreeMonster) {
-            return 1; // TreeMonster can't be killed, but give minimal score if somehow killed
+            return 1; 
         }
-        return 10; // Default score for unknown enemy types
+        return 10; 
     }
     
     private void endGameWithSummary(GameSummary.GameEndReason reason, boolean isWin) {
@@ -1834,7 +1872,7 @@ public class GameScreen extends AppMenu {
             return;
         }
         
-        // Calculate game statistics
+        
         int currentKills = player.getCharacter().getKills();
         int currentScore = player.getCharacter().getScore();
         int currentXp = player.getCharacter().getXp();
@@ -1843,11 +1881,11 @@ public class GameScreen extends AppMenu {
         int scoreGained = currentScore - gameStartScore;
         int xpGained = currentXp - gameStartXp;
         
-        // Calculate survival time
+        
         float totalGameTime = gameController.getGameDurationMinutes() * 60f;
         int survivalTimeSeconds = (int)(totalGameTime - gameTimeRemaining);
         
-        // Create game summary
+        
         GameSummary summary = new GameSummary(
             player.getUsername(),
             player.getAvatarPath(),
@@ -1862,13 +1900,13 @@ public class GameScreen extends AppMenu {
             isWin
         );
         
-        // Update player statistics
+        
         updatePlayerStatistics(player, killsGained, scoreGained, survivalTimeSeconds, isWin);
         
-        // Save player data
+        
         gameController.getDatabaseManager().savePlayer(player);
         
-        // Show game summary screen
+        
         GameSummaryController summaryController = new GameSummaryController(
             gameController.getDatabaseManager(), 
             gameController.getGameDurationMinutes()
@@ -1877,23 +1915,23 @@ public class GameScreen extends AppMenu {
     }
     
     private void updatePlayerStatistics(Player player, int killsGained, int scoreGained, int survivalTime, boolean isWin) {
-        // Update total games
+        
         player.addTotalGames();
         
-        // Update wins if player won
+        
         if (isWin) {
             player.addWin();
         }
         
-        // Update total kills (add kills gained this game to player's total)
+        
         player.addKills(killsGained);
         
-        // Update high score if current score is higher
+        
         if (player.getCharacter().getScore() > player.getHighScore()) {
             player.setHighScore(player.getCharacter().getScore());
         }
         
-        // Update total survival duration
+        
         player.addSurvivalDuration(survivalTime);
         
         System.out.println("Player statistics updated - Total games: " + player.getTotalGames() + 
@@ -1905,200 +1943,202 @@ public class GameScreen extends AppMenu {
         Player player = App.getInstance().getPlayer();
         if (player == null || player.getCharacter() == null) return;
         
-        // Set UI camera
+        
         uiCamera.update();
         batch.setProjectionMatrix(uiCamera.combined);
         shapeRenderer.setProjectionMatrix(uiCamera.combined);
         
-        // UI Box dimensions and position
+        
         float boxX = 20f;
         float boxY = Gdx.graphics.getHeight() - 200f;
         float boxWidth = 300f;
         float boxHeight = 180f;
         
-        // Draw UI background box
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.7f); // Semi-transparent black
+        shapeRenderer.setColor(0, 0, 0, 0.7f); 
         shapeRenderer.rect(boxX, boxY, boxWidth, boxHeight);
         shapeRenderer.end();
         
-        // Draw UI border
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.rect(boxX, boxY, boxWidth, boxHeight);
         shapeRenderer.end();
         
-        // Draw UI content
+        
         batch.begin();
         
-        // Character avatar
+        
         float avatarSize = 60f;
         float avatarX = boxX + 10f;
         float avatarY = boxY + boxHeight - avatarSize - 10f;
         batch.draw(avatarTexture, avatarX, avatarY, avatarSize, avatarSize);
         
-        // Text information
+        
         float textX = avatarX + avatarSize + 10f;
         float textY = boxY + boxHeight - 20f;
         float lineHeight = 18f;
         
-        // Username and Character name
+        
         font.draw(batch, "Player: " + player.getUsername(), textX, textY);
         textY -= lineHeight;
         font.draw(batch, "Character: " + player.getCharacter().getName(), textX, textY);
         textY -= lineHeight;
         
-        // HP, Score (session only), Kills (session only)
+        
         font.draw(batch, "HP: " + player.getCharacter().getHp(), textX, textY);
         textY -= lineHeight;
         
-        // Show score gained in this game session only
+        
         int sessionScore = player.getCharacter().getScore() - gameStartScore;
         font.draw(batch, "Score: " + sessionScore, textX, textY);
         textY -= lineHeight;
         
-        // Show kills gained in this game session only
+        
         int sessionKills = player.getCharacter().getKills() - gameStartKills;
         font.draw(batch, "Kills: " + sessionKills, textX, textY);
         textY -= lineHeight;
         
-        // Level (session-based: start from level 1 each game)
-        int displayLevel = 1 + (player.getCharacter().getLevel() - lastKnownLevel);
-        font.draw(batch, "Level: " + displayLevel, textX, textY);
+        
+        int currentLevel = player.getCharacter().getLevel();
+        font.draw(batch, "Level: " + currentLevel, textX, textY);
         textY -= lineHeight + 5f;
         
         batch.end();
         
-        // XP Bar (session progress only)
+        
         float barX = textX;
         float barY = textY - 15f;
         float barWidth = 150f;
         float barHeight = 12f;
         
-        // Calculate session XP progress (show progress within current session level)
-        int sessionXpGained = player.getCharacter().getXp() - gameStartXp;
-        int sessionLevel = 1 + (player.getCharacter().getLevel() - lastKnownLevel);
-        int xpNeededForNextSessionLevel = 20 * sessionLevel; // XP needed to reach next session level
-        int sessionXpForCurrentLevel = sessionXpGained % xpNeededForNextSessionLevel;
-        if (sessionLevel > 1) {
-            // If we've leveled up, show progress within current level
-            int xpForPreviousLevels = 0;
-            for (int i = 1; i < sessionLevel; i++) {
-                xpForPreviousLevels += 20 * i;
-            }
-            sessionXpForCurrentLevel = sessionXpGained - xpForPreviousLevels;
-        } else {
-            sessionXpForCurrentLevel = sessionXpGained;
-        }
-        float xpProgress = xpNeededForNextSessionLevel > 0 ? (float) sessionXpForCurrentLevel / xpNeededForNextSessionLevel : 0f;
         
-        // Draw XP bar background
+        int currentXp = player.getCharacter().getXp();
+        int xpForCurrentLevel = 0;
+        int xpForNextLevel = 0;
+        
+        
+        for (int i = 1; i <= currentLevel; i++) {
+            xpForCurrentLevel += 20 * (i - 1);
+        }
+        xpForNextLevel = xpForCurrentLevel + (20 * currentLevel);
+        
+        
+        int xpInCurrentLevel = currentXp - xpForCurrentLevel;
+        int xpNeededForNextLevel = 20 * currentLevel;
+        
+        
+        xpInCurrentLevel = Math.min(xpInCurrentLevel, xpNeededForNextLevel);
+        float xpProgress = xpNeededForNextLevel > 0 ? (float) xpInCurrentLevel / xpNeededForNextLevel : 0f;
+        
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 1f); // Dark gray
+        shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 1f); 
         shapeRenderer.rect(barX, barY, barWidth, barHeight);
         shapeRenderer.end();
         
-        // Draw XP bar fill
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0.2f, 0.8f, 0.2f, 1f); // Green
+        shapeRenderer.setColor(0.2f, 0.8f, 0.2f, 1f); 
         shapeRenderer.rect(barX, barY, barWidth * xpProgress, barHeight);
         shapeRenderer.end();
         
-        // Draw XP bar border
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.rect(barX, barY, barWidth, barHeight);
         shapeRenderer.end();
         
-        // Draw XP text on bar (session progress)
+        
         batch.begin();
-        font.draw(batch, sessionXpForCurrentLevel + "/" + xpNeededForNextSessionLevel + " XP", barX + 5f, barY + barHeight - 2f);
+        font.draw(batch, xpInCurrentLevel + "/" + xpNeededForNextLevel + " XP", barX + 5f, barY + barHeight - 2f);
         batch.end();
         
-        // Render timer in top-right corner
+        
         renderTimer();
         
-        // Render bullet icons under timer
+        
         renderBulletIcons();
         
-        // Render active abilities
+        
         renderActiveAbilities();
     }
     
     private void renderTimer() {
-        // Calculate minutes and seconds
+        
         int totalSeconds = (int) Math.ceil(gameTimeRemaining);
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
         
-        // Format timer text
+        
         String timerText = String.format("%02d:%02d", minutes, seconds);
         
-        // Position in top-right corner
-        float timerX = Gdx.graphics.getWidth() - 200f; // 200 pixels from right edge
-        float timerY = Gdx.graphics.getHeight() - 30f; // 30 pixels from top
         
-        // Change color based on remaining time
+        float timerX = Gdx.graphics.getWidth() - 200f; 
+        float timerY = Gdx.graphics.getHeight() - 30f; 
+        
+        
         if (gameTimeRemaining <= 60f) {
-            timerFont.setColor(Color.RED); // Red when less than 1 minute
+            timerFont.setColor(Color.RED); 
         } else if (gameTimeRemaining <= 180f) {
-            timerFont.setColor(Color.ORANGE); // Orange when less than 3 minutes
+            timerFont.setColor(Color.ORANGE); 
         } else {
-            timerFont.setColor(Color.WHITE); // White otherwise
+            timerFont.setColor(Color.WHITE); 
         }
         
-        // Draw timer background box
+        
         float textWidth = 180f;
         float textHeight = 60f;
         float boxX = timerX - 10f;
         float boxY = timerY - textHeight + 10f;
         
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.7f); // Semi-transparent black
+        shapeRenderer.setColor(0, 0, 0, 0.7f); 
         shapeRenderer.rect(boxX, boxY, textWidth, textHeight);
         shapeRenderer.end();
         
-        // Draw timer border
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.rect(boxX, boxY, textWidth, textHeight);
         shapeRenderer.end();
         
-        // Draw timer text
+        
         batch.begin();
         timerFont.draw(batch, timerText, timerX, timerY);
         batch.end();
     }
     
     private void renderBulletIcons() {
-        // Position bullet icons under the timer
-        float iconSize = 18f; // Slightly smaller icons to fit more
-        float iconSpacing = 22f; // Tighter spacing
-        float startX = Gdx.graphics.getWidth() - 300f; // Move further left for more space
-        float startY = Gdx.graphics.getHeight() - 120f; // Below timer
         
-        // Calculate how many bullets to show per row (max 8 per row for better fit)
+        float iconSize = 18f; 
+        float iconSpacing = 22f; 
+        float startX = Gdx.graphics.getWidth() - 300f; 
+        float startY = Gdx.graphics.getHeight() - 120f; 
+        
+        
         int bulletsPerRow = Math.min(maxAmmo, 8);
         int rows = (int) Math.ceil((float) maxAmmo / bulletsPerRow);
         
-        // Draw background for bullet icons (bigger box)
-        float backgroundWidth = bulletsPerRow * iconSpacing + 30f; // More padding
-        float backgroundHeight = rows * (iconSize + 8f) + 30f; // More vertical spacing
+        
+        float backgroundWidth = bulletsPerRow * iconSpacing + 30f; 
+        float backgroundHeight = rows * (iconSize + 8f) + 30f; 
         float backgroundX = startX - 15f;
         float backgroundY = startY - backgroundHeight + 15f;
         
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.7f); // Semi-transparent black
+        shapeRenderer.setColor(0, 0, 0, 0.7f); 
         shapeRenderer.rect(backgroundX, backgroundY, backgroundWidth, backgroundHeight);
         shapeRenderer.end();
         
-        // Draw background border
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.rect(backgroundX, backgroundY, backgroundWidth, backgroundHeight);
         shapeRenderer.end();
         
-        // Draw bullet icons
+        
         batch.begin();
         for (int i = 0; i < maxAmmo; i++) {
             int row = i / bulletsPerRow;
@@ -2107,29 +2147,29 @@ public class GameScreen extends AppMenu {
             float iconX = startX + col * iconSpacing;
             float iconY = startY - row * (iconSize + 8f);
             
-            // Choose color based on ammo status
+            
             Color iconColor;
             if (i < currentAmmo) {
-                iconColor = Color.YELLOW; // Available ammo
+                iconColor = Color.YELLOW; 
             } else {
-                iconColor = Color.GRAY; // Empty
+                iconColor = Color.GRAY; 
             }
             
-            // Tint the bullet texture
+            
             batch.setColor(iconColor);
             batch.draw(bulletTexture, iconX, iconY, iconSize, iconSize);
         }
         
-        // Reset batch color
+        
         batch.setColor(Color.WHITE);
         
-        // Draw reload status text if reloading
+        
         if (isReloading) {
             font.setColor(Color.ORANGE);
             float reloadProgress = (reloadTimer / reloadDuration) * 100f;
             String reloadText = "Reloading... " + (int)reloadProgress + "%";
             font.draw(batch, reloadText, startX, startY - backgroundHeight - 10f);
-            font.setColor(Color.WHITE); // Reset font color
+            font.setColor(Color.WHITE); 
         }
         
         batch.end();
@@ -2142,28 +2182,28 @@ public class GameScreen extends AppMenu {
         List<com.example.dawn.models.ActiveAbility> activeAbilities = player.getCharacter().getActiveAbilities();
         if (activeAbilities.isEmpty()) return;
         
-        // Position abilities in top-left corner
+        
         float startX = 20f;
-        float startY = Gdx.graphics.getHeight() - 250f; // Below the main UI box
+        float startY = Gdx.graphics.getHeight() - 250f; 
         float abilityHeight = 30f;
         float abilitySpacing = 35f;
         
-        // Draw background for abilities
+        
         float backgroundWidth = 250f;
         float backgroundHeight = activeAbilities.size() * abilitySpacing + 20f;
         
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.7f); // Semi-transparent black
+        shapeRenderer.setColor(0, 0, 0, 0.7f); 
         shapeRenderer.rect(startX, startY - backgroundHeight, backgroundWidth, backgroundHeight);
         shapeRenderer.end();
         
-        // Draw border
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.YELLOW); // Yellow border for abilities
+        shapeRenderer.setColor(Color.YELLOW); 
         shapeRenderer.rect(startX, startY - backgroundHeight, backgroundWidth, backgroundHeight);
         shapeRenderer.end();
         
-        // Draw ability text
+        
         batch.begin();
         font.setColor(Color.YELLOW);
         
@@ -2175,7 +2215,7 @@ public class GameScreen extends AppMenu {
             font.draw(batch, abilityText, startX + 10f, textY);
         }
         
-        font.setColor(Color.WHITE); // Reset font color
+        font.setColor(Color.WHITE); 
         batch.end();
     }
     
@@ -2198,25 +2238,25 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // Create reload animation
+        
         if (reloadTextures.size > 0) {
             Array<TextureRegion> reloadFrames = new Array<>();
             for (Texture texture : reloadTextures) {
                 reloadFrames.add(new TextureRegion(texture));
             }
-            // Animation duration should match reload time
+            
             float frameTime = reloadDuration / reloadFrames.size;
             reloadAnimation = new Animation<>(frameTime, reloadFrames, Animation.PlayMode.NORMAL);
             System.out.println("Created reload animation with " + reloadFrames.size + " frames, frame time: " + frameTime + "s");
         } else {
-            // No reload animation available
+            
             reloadAnimation = null;
             System.out.println("No reload animation textures found");
         }
     }
     
     private void loadDeathAnimations() {
-        // Load death effect textures
+        
         for (int i = 0; i < 4; i++) {
             try {
                 String texturePath = "textures/DeathFX_" + i + ".png";
@@ -2228,13 +2268,13 @@ public class GameScreen extends AppMenu {
             }
         }
         
-        // Create death animation
+        
         if (deathTextures.size > 0) {
             Array<TextureRegion> deathFrames = new Array<>();
             for (Texture texture : deathTextures) {
                 deathFrames.add(new TextureRegion(texture));
             }
-            // Death animation plays once over 0.8 seconds
+            
             float frameTime = 0.8f / deathFrames.size;
             deathAnimation = new Animation<>(frameTime, deathFrames, Animation.PlayMode.NORMAL);
             System.out.println("Created death animation with " + deathFrames.size + " frames, frame time: " + frameTime + "s");
@@ -2245,19 +2285,19 @@ public class GameScreen extends AppMenu {
     }
     
     private void updateDeathEffects(float delta) {
-        // Update death effect animations
+        
         for (DeathEffect effect : deathEffects) {
             if (effect.active) {
                 effect.update(delta);
                 
-                // Check if animation is finished
+                
                 if (deathAnimation != null && effect.isFinished(deathAnimation.getAnimationDuration())) {
                     effect.active = false;
                 }
             }
         }
         
-        // Remove finished death effects
+        
         for (int i = deathEffects.size - 1; i >= 0; i--) {
             if (!deathEffects.get(i).active) {
                 deathEffects.removeIndex(i);
@@ -2279,13 +2319,13 @@ public class GameScreen extends AppMenu {
         Player player = App.getInstance().getPlayer();
         if (player == null || player.getCharacter() == null) return;
         
-        // Update active ability timers
+        
         player.getCharacter().updateActiveAbilities(delta);
         
-        // Check for level-up
+        
         int currentLevel = player.getCharacter().getLevel();
         if (currentLevel > lastKnownLevel) {
-            // Player leveled up!
+            
             for (int level = lastKnownLevel + 1; level <= currentLevel; level++) {
                 grantRandomAbility(player.getCharacter());
             }
@@ -2294,17 +2334,17 @@ public class GameScreen extends AppMenu {
     }
     
     private void grantRandomAbility(com.example.dawn.models.Character character) {
-        // Get random ability
+        
         Ability[] abilities = Ability.values();
         Ability randomAbility = abilities[MathUtils.random(abilities.length - 1)];
         
         System.out.println("LEVEL UP! Granted ability: " + randomAbility.getName() + " - " + randomAbility.getDescription());
         
-        // Apply ability effect
+        
         switch (randomAbility) {
             case VITALITY:
                 character.addPermanentAbility(randomAbility);
-                // Increase max HP and heal 1 HP
+                
                 int currentHp = character.getHp();
                 int maxHp = character.getMaxHp();
                 character.setHp(Math.min(currentHp + 1, maxHp));
@@ -2325,9 +2365,9 @@ public class GameScreen extends AppMenu {
             case AMOCREASE:
                 character.addPermanentAbility(randomAbility);
                 character.addBonusMaxAmmo(5);
-                // Update current magazine system
+                
                 maxAmmo += 5;
-                currentAmmo = Math.min(currentAmmo + 5, maxAmmo); // Add some ammo too
+                currentAmmo = Math.min(currentAmmo + 5, maxAmmo); 
                 System.out.println("AMOCREASE: Max ammo increased by 5! New max: " + maxAmmo);
                 break;
                 
@@ -2344,12 +2384,49 @@ public class GameScreen extends AppMenu {
         for (DeathEffect effect : deathEffects) {
             if (effect.active) {
                 TextureRegion currentFrame = deathAnimation.getKeyFrame(effect.animationTime);
-                float effectSize = 64f; // Size of death effect
+                float effectSize = 64f; 
                 float renderX = effect.position.x - effectSize / 2f;
                 float renderY = effect.position.y - effectSize / 2f;
                 
                 batch.draw(currentFrame, renderX, renderY, effectSize, effectSize);
             }
+        }
+    }
+    
+    private void updatePlayerImmunity(float delta) {
+        if (playerImmune) {
+            immunityTimer += delta;
+            if (immunityTimer >= IMMUNITY_DURATION) {
+                playerImmune = false;
+                immunityTimer = 0f;
+                System.out.println("Player immunity ended");
+            }
+        }
+    }
+    
+    private void applyKnockback(Enemy enemy, Vector2 bulletPosition, int damage) {
+        
+        if (enemy instanceof TreeMonster) {
+            return;
+        }
+        
+        
+        Vector2 enemyPos = enemy.getPosition();
+        float deltaX = enemyPos.x - bulletPosition.x;
+        float deltaY = enemyPos.y - bulletPosition.y;
+        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        if (distance > 0) {
+            
+            deltaX /= distance;
+            deltaY /= distance;
+            
+            
+            float knockbackStrength = 8f + (damage * 3f); 
+            enemyPos.x += deltaX * knockbackStrength;
+            enemyPos.y += deltaY * knockbackStrength;
+            
+            System.out.println("Applied knockback to enemy: " + knockbackStrength + " units");
         }
     }
     
@@ -2362,80 +2439,32 @@ public class GameScreen extends AppMenu {
     
     @Override
     public void dispose() {
-        if (tileTexture != null) {
-            tileTexture.dispose();
-        }
-        
-        // Dispose weapon texture
-        if (weaponTexture != null) {
-            weaponTexture.dispose();
-        }
-        
-        // Dispose idle animation textures
-        if (idleTextures != null) {
-            for (Texture texture : idleTextures) {
-                if (texture != null) {
-                    texture.dispose();
-                }
-            }
-        }
-        
-        // Dispose moving animation textures
-        if (movingTextures != null) {
-            for (Texture texture : movingTextures) {
-                if (texture != null) {
-                    texture.dispose();
-                }
-            }
-        }
-        
-        // Dispose bullet texture
-        if (bulletTexture != null) {
-            bulletTexture.dispose();
-        }
-        
-        // Dispose cursor texture
-        if (cursorTexture != null) {
-            cursorTexture.dispose();
-        }
-        
-        // Dispose avatar texture
-        if (avatarTexture != null) {
-            avatarTexture.dispose();
-        }
-        
-        // Dispose reload textures
-        if (reloadTextures != null) {
-            for (Texture texture : reloadTextures) {
-                if (texture != null) {
-                    texture.dispose();
-                }
-            }
-        }
-        
-        // Dispose death textures
-        if (deathTextures != null) {
-            for (Texture texture : deathTextures) {
-                if (texture != null) {
-                    texture.dispose();
-                }
-            }
-        }
-        
-        // Dispose UI elements
-        if (font != null) {
-            font.dispose();
-        }
-        if (timerFont != null) {
-            timerFont.dispose();
-        }
-        if (shapeRenderer != null) {
-            shapeRenderer.dispose();
-        }
-        
-        if (batch != null) {
-            batch.dispose();
-        }
         stage.dispose();
+        batch.dispose();
+        shapeRenderer.dispose();
+        
+        font.dispose();
+        timerFont.dispose();
+        
+        
+        if (tileTexture != null) tileTexture.dispose();
+        if (weaponTexture != null) weaponTexture.dispose();
+        if (bulletTexture != null) bulletTexture.dispose();
+        if (cursorTexture != null) cursorTexture.dispose();
+        if (avatarTexture != null) avatarTexture.dispose();
+        
+        
+        for (Texture texture : idleTextures) {
+            texture.dispose();
+        }
+        for (Texture texture : movingTextures) {
+            texture.dispose();
+        }
+        for (Texture texture : reloadTextures) {
+            texture.dispose();
+        }
+        for (Texture texture : deathTextures) {
+            texture.dispose();
+        }
     }
 } 

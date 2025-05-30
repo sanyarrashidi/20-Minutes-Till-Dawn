@@ -38,7 +38,7 @@ public class GameSummaryScreen extends AppMenu {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         
-        // Initialize fonts
+        
         titleFont = new BitmapFont();
         titleFont.getData().setScale(2.5f);
         
@@ -48,10 +48,10 @@ public class GameSummaryScreen extends AppMenu {
         bodyFont = new BitmapFont();
         bodyFont.getData().setScale(1.2f);
         
-        // Load avatar texture
+        
         loadAvatarTexture();
         
-        // Create UI
+        
         createUI(skin);
     }
     
@@ -60,7 +60,7 @@ public class GameSummaryScreen extends AppMenu {
             if (gameSummary.getPlayerAvatarPath() != null && !gameSummary.getPlayerAvatarPath().isEmpty()) {
                 avatarTexture = new Texture(Gdx.files.internal(gameSummary.getPlayerAvatarPath()));
             } else {
-                // Default avatar
+                
                 avatarTexture = new Texture(Gdx.files.internal("characters/T_Character_0.png"));
             }
         } catch (Exception e) {
@@ -74,26 +74,26 @@ public class GameSummaryScreen extends AppMenu {
         mainTable.setFillParent(true);
         mainTable.center();
         
-        // Title
+        
         Label titleLabel = new Label(gameSummary.isWin() ? "VICTORY!" : "GAME OVER", skin);
         titleLabel.setFontScale(2.5f);
         titleLabel.setColor(gameSummary.isWin() ? Color.GREEN : Color.RED);
         mainTable.add(titleLabel).colspan(2).padBottom(20).row();
         
-        // End reason
+        
         Label endReasonLabel = new Label(gameSummary.getEndReasonText(), skin);
         endReasonLabel.setFontScale(1.5f);
         endReasonLabel.setColor(Color.YELLOW);
         mainTable.add(endReasonLabel).colspan(2).padBottom(30).row();
         
-        // Player info section
+        
         Table playerInfoTable = new Table();
         
-        // Avatar placeholder (we'll draw this manually)
+        
         Label avatarLabel = new Label("", skin);
         playerInfoTable.add(avatarLabel).size(100, 100).padRight(30);
         
-        // Player details
+        
         Table detailsTable = new Table();
         Label playerLabel = new Label("Player: " + gameSummary.getPlayerUsername(), skin);
         playerLabel.setFontScale(1.3f);
@@ -110,17 +110,17 @@ public class GameSummaryScreen extends AppMenu {
         playerInfoTable.add(detailsTable).left();
         mainTable.add(playerInfoTable).colspan(2).center().padBottom(40).row();
         
-        // Stats section
+        
         Table statsTable = new Table();
         Label statsTitle = new Label("GAME STATISTICS", skin);
         statsTitle.setFontScale(1.8f);
         statsTitle.setColor(Color.CYAN);
         statsTable.add(statsTitle).colspan(2).center().padBottom(25).row();
         
-        // Create a centered stats layout
+        
         Table statsGrid = new Table();
         
-        // Row 1: Kills and Score
+        
         Label killsLabel = new Label("Kills: " + String.valueOf(gameSummary.getKills()), skin);
         killsLabel.setFontScale(1.4f);
         killsLabel.setColor(Color.RED);
@@ -131,7 +131,7 @@ public class GameSummaryScreen extends AppMenu {
         scoreLabel.setColor(Color.YELLOW);
         statsGrid.add(scoreLabel).center().padBottom(15).row();
         
-        // Row 2: Level and XP
+        
         Label levelLabel = new Label("Final Level: " + String.valueOf(gameSummary.getFinalLevel()), skin);
         levelLabel.setFontScale(1.4f);
         levelLabel.setColor(Color.GREEN);
@@ -146,7 +146,7 @@ public class GameSummaryScreen extends AppMenu {
         
         mainTable.add(statsTable).colspan(2).center().padBottom(50).row();
         
-        // Buttons
+        
         Table buttonTable = new Table();
         
         TextButton playAgainButton = new TextButton("Play Again", skin);
@@ -182,38 +182,38 @@ public class GameSummaryScreen extends AppMenu {
     
     @Override
     public void render(float delta) {
-        // Clear screen
+        
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        // Draw background
+        
         drawBackground();
         
-        // Draw custom elements (avatar)
+        
         drawCustomElements();
         
-        // Draw UI
+        
         stage.act(delta);
         stage.draw();
     }
     
     private void drawBackground() {
-        // Draw a dark background with some decoration
+        
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         
-        // Main background
+        
         shapeRenderer.setColor(0.05f, 0.05f, 0.15f, 1f);
         shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         
-        // Decorative border
+        
         shapeRenderer.setColor(gameSummary.isWin() ? 0.2f : 0.3f, 
                               gameSummary.isWin() ? 0.4f : 0.1f, 
                               gameSummary.isWin() ? 0.2f : 0.1f, 0.8f);
         float borderWidth = 10f;
-        shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), borderWidth); // Bottom
-        shapeRenderer.rect(0, Gdx.graphics.getHeight() - borderWidth, Gdx.graphics.getWidth(), borderWidth); // Top
-        shapeRenderer.rect(0, 0, borderWidth, Gdx.graphics.getHeight()); // Left
-        shapeRenderer.rect(Gdx.graphics.getWidth() - borderWidth, 0, borderWidth, Gdx.graphics.getHeight()); // Right
+        shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), borderWidth); 
+        shapeRenderer.rect(0, Gdx.graphics.getHeight() - borderWidth, Gdx.graphics.getWidth(), borderWidth); 
+        shapeRenderer.rect(0, 0, borderWidth, Gdx.graphics.getHeight()); 
+        shapeRenderer.rect(Gdx.graphics.getWidth() - borderWidth, 0, borderWidth, Gdx.graphics.getHeight()); 
         
         shapeRenderer.end();
     }
@@ -221,11 +221,11 @@ public class GameSummaryScreen extends AppMenu {
     private void drawCustomElements() {
         batch.begin();
         
-        // Draw avatar
+        
         if (avatarTexture != null) {
             float avatarSize = 100f;
-            float avatarX = Gdx.graphics.getWidth() / 2f - 180f; // Adjusted for new layout
-            float avatarY = Gdx.graphics.getHeight() / 2f + 80f; // Adjusted for new layout
+            float avatarX = Gdx.graphics.getWidth() / 2f - 180f; 
+            float avatarY = Gdx.graphics.getHeight() / 2f + 80f; 
             batch.draw(avatarTexture, avatarX, avatarY, avatarSize, avatarSize);
         }
         

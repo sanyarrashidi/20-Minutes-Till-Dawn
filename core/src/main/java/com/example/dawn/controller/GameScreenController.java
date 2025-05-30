@@ -16,11 +16,11 @@ public class GameScreenController extends Controller {
     }
     
     public void pauseGame() {
-        // TODO: Implement pause functionality
+        
     }
     
     public void resumeGame() {
-        // TODO: Implement resume functionality
+        
     }
     
     public void endGame() {
@@ -28,8 +28,8 @@ public class GameScreenController extends Controller {
     }
     
     public void endGame(com.example.dawn.models.GameSummary.GameEndReason reason) {
-        // This method will be called from GameScreen with the appropriate reason
-        // The GameScreen will handle creating and showing the summary
+        
+        
         System.out.println("Game ended with reason: " + reason);
     }
     

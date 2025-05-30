@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.IntSet;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.example.dawn.configuration.preferences.ControlsData;
 
-/** Abstract base for controls that use buttons, like keyboard keys or game pads buttons. */
+
 public abstract class AbstractButtonControl extends AbstractControl {
     protected IntSet pressedButtons = new IntSet(4);
 
@@ -14,29 +14,29 @@ public abstract class AbstractButtonControl extends AbstractControl {
     protected int right;
     protected int jump;
 
-    /** Updates current movement according to button states. */
+    
     protected void updateMovement() {
         if (pressedButtons.size == 0) {
             stop();
         } else if (isPressed(up)) {
-            if (isPressed(left)) { // Up-left.
+            if (isPressed(left)) { 
                 movement.set(-COS, SIN);
-            } else if (isPressed(right)) { // Up-right.
+            } else if (isPressed(right)) { 
                 movement.set(COS, SIN);
-            } else { // Up.
+            } else { 
                 movement.set(0f, 1f);
             }
         } else if (isPressed(down)) {
-            if (isPressed(left)) { // Down-left.
+            if (isPressed(left)) { 
                 movement.set(-COS, -SIN);
-            } else if (isPressed(right)) { // Down-right.
+            } else if (isPressed(right)) { 
                 movement.set(COS, -SIN);
-            } else { // Down.
+            } else { 
                 movement.set(0f, -1f);
             }
-        } else if (isPressed(left)) { // Left.
+        } else if (isPressed(left)) { 
             movement.set(-1f, 0f);
-        } else if (isPressed(right)) { // Right.
+        } else if (isPressed(right)) { 
             movement.set(1f, 0f);
         } else {
             stop();
@@ -45,11 +45,9 @@ public abstract class AbstractButtonControl extends AbstractControl {
 
     @Override
     public void update(final Viewport gameViewport, final float gameX, final float gameY) {
-        // Button controls usually do not need relative position of controlled entity.
+        
     }
 
-    /** @param key button code.
-     * @return true if button is currently pressed. */
     protected boolean isPressed(final int key) {
         return pressedButtons.contains(key);
     }
@@ -80,60 +78,60 @@ public abstract class AbstractButtonControl extends AbstractControl {
         pressedButtons.clear();
     }
 
-    /** @return up movement button code. */
+    
     public int getUp() {
         return up;
     }
 
-    /** @param up will become up movement button code. */
+    
     public void setUp(final int up) {
         pressedButtons.remove(this.up);
         updateMovement();
         this.up = up;
     }
 
-    /** @return down movement button code. */
+    
     public int getDown() {
         return down;
     }
 
-    /** @param down will become down movement button code. */
+    
     public void setDown(final int down) {
         pressedButtons.remove(this.down);
         updateMovement();
         this.down = down;
     }
 
-    /** @return left movement button code. */
+    
     public int getLeft() {
         return left;
     }
 
-    /** @param left will become left movement button code. */
+    
     public void setLeft(final int left) {
         pressedButtons.remove(this.left);
         updateMovement();
         this.left = left;
     }
 
-    /** @return right movement button code. */
+    
     public int getRight() {
         return right;
     }
 
-    /** @param right will become right movement button code. */
+    
     public void setRight(final int right) {
         pressedButtons.remove(this.right);
         updateMovement();
         this.right = right;
     }
 
-    /** @return jump button code. */
+    
     public int getJump() {
         return jump;
     }
 
-    /** @param jump will become jump button code. */
+    
     public void setJump(final int jump) {
         this.jump = jump;
     }

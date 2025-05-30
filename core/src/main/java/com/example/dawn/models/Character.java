@@ -9,8 +9,8 @@ public class Character {
     private String description;
     private int unlockCost;
     private int hp;
-    private int initialHp; // Store the original HP value for resetting
-    private int speed = 300; // Movement speed in pixels per second (default)
+    private int initialHp; 
+    private int speed = 300; 
     private int score = 0;
     private int kills = 0;
     private int survivalDuration = 0;
@@ -19,11 +19,11 @@ public class Character {
     private ArrayList<String> stillImagePaths;
     private ArrayList<String> movingImagePaths;
     
-    // Ability system
+    
     private List<Ability> permanentAbilities;
     private List<ActiveAbility> activeAbilities;
-    private int bonusMaxAmmo = 0; // From AMOCREASE ability
-    private int bonusProjectiles = 0; // From PROCREASE ability
+    private int bonusMaxAmmo = 0; 
+    private int bonusProjectiles = 0; 
     
     public Character() {
         this.permanentAbilities = new ArrayList<>();
@@ -36,8 +36,8 @@ public class Character {
         this.description = description;
         this.unlockCost = unlockCost;
         this.hp = hp;
-        this.initialHp = hp; // Store the initial HP value
-        this.speed = 300; // Default speed
+        this.initialHp = hp; 
+        this.speed = 300; 
         this.stillImagePaths = new ArrayList<>();
         this.movingImagePaths = new ArrayList<>();
         this.permanentAbilities = new ArrayList<>();
@@ -81,8 +81,8 @@ public class Character {
     }
     
     public int getLevel() {
-        // Level starts from 1, needs 20*i XP to reach level i+1
-        // Level 1: 0-19 XP, Level 2: 20-59 XP, Level 3: 60-119 XP, etc.
+        
+        
         int level = 1;
         int totalXpNeeded = 0;
         
@@ -97,7 +97,7 @@ public class Character {
     }
     
     public int getXpForCurrentLevel() {
-        // XP accumulated for the current level
+        
         int level = 1;
         int totalXpUsed = 0;
         
@@ -115,7 +115,7 @@ public class Character {
     }
     
     public int getXpNeededForNextLevel() {
-        // XP needed to reach the next level
+        
         return 20 * getLevel();
     }
 
@@ -196,17 +196,17 @@ public class Character {
     }
     
     public void resetForNewGame() {
-        // Reset HP to initial value
+        
         this.hp = this.initialHp;
         
-        // DO NOT reset accumulated stats (score, kills, survivalDuration, xp) - these should persist across games
-        // Only reset temporary game state:
         
-        // Clear all abilities (both permanent and active)
+        
+        
+        
         this.permanentAbilities.clear();
         this.activeAbilities.clear();
         
-        // Reset ability bonuses
+        
         this.bonusMaxAmmo = 0;
         this.bonusProjectiles = 0;
         
@@ -221,7 +221,7 @@ public class Character {
         this.speed = speed;
     }
     
-    // Ability system methods
+    
     public List<Ability> getPermanentAbilities() {
         return permanentAbilities;
     }
@@ -237,9 +237,9 @@ public class Character {
     }
     
     public void addActiveAbility(Ability ability) {
-        // Remove existing instance of same ability if present
+        
         activeAbilities.removeIf(active -> active.getAbility() == ability);
-        // Add new instance
+        
         activeAbilities.add(new ActiveAbility(ability, ability.getDuration()));
     }
     
@@ -264,13 +264,13 @@ public class Character {
     }
     
     public int getMaxHp() {
-        // Base HP + VITALITY bonuses
+        
         int vitalityCount = (int) permanentAbilities.stream().filter(ability -> ability == Ability.VITALITY).count();
         return initialHp + vitalityCount;
     }
     
     public void updateActiveAbilities(float delta) {
-        // Update timers and remove expired abilities
+        
         activeAbilities.removeIf(active -> {
             active.update(delta);
             return active.isExpired();

@@ -54,7 +54,7 @@ public abstract class Enemy {
         this.active = active;
     }
     
-    // Check if this enemy collides with a circular area (like player)
+    
     public boolean collidesWith(Vector2 otherPosition, float otherRadius) {
         float distance = position.dst(otherPosition);
         return distance < (size / 2f + otherRadius);

@@ -51,7 +51,7 @@ public class SignUpMenuController extends Controller {
     }
 
     public void guestLogin() {
-        // Create a temporary guest player with default character
+        
         Character shana = Dawn.getDatabaseManager().getCharacter("Shana");
         if (shana == null) {
             System.out.println("Error: Default character 'Shana' not found!");

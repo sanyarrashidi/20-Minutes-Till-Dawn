@@ -13,7 +13,7 @@ import com.github.czyzby.autumn.mvc.component.ui.controller.impl.StandardViewSho
 import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.example.dawn.service.Box2DService;
 
-/** Renders Box2D world. */
+
 @View(id = "game", value = "ui/templates/game.lml")
 public class GameController extends StandardViewShower implements ViewResizer, ViewRenderer {
     @Inject private Box2DService box2d;
@@ -22,13 +22,13 @@ public class GameController extends StandardViewShower implements ViewResizer, V
 
     @Override
     public void show(final Stage stage, final Action action) {
-        // Switch to game music when entering the game
+        
         enhancedMusicService.switchToGameMusic();
         
         box2d.create();
         super.show(stage, Actions.sequence(action, Actions.run(new Runnable() {
             @Override
-            public void run() { // Listening to user input events:
+            public void run() { 
                 final InputMultiplexer inputMultiplexer = new InputMultiplexer(stage);
                 box2d.initiateControls(inputMultiplexer);
                 Gdx.input.setInputProcessor(inputMultiplexer);

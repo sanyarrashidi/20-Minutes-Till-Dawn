@@ -38,7 +38,7 @@ import com.example.dawn.service.controls.impl.GamePadControl;
 import com.example.dawn.service.controls.impl.KeyboardControl;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 
-/** Allows to edit chosen controls. */
+
 @ViewDialog(id = "edit", value = "ui/templates/dialogs/edit.lml", cacheInstance = true)
 public class ControlsEditController implements ActionContainer, ViewDialogShower {
     @ViewStage private Stage stage;
@@ -50,7 +50,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
     private TextButton checkedButton;
     private final MockUpdateAction updateAction = new MockUpdateAction();
 
-    // Keyboard widgets:
+    
     @LmlActor("keyUp") private TextButton keyUp;
     @LmlActor("keyDown") private TextButton keyDown;
     @LmlActor("keyLeft") private TextButton keyLeft;
@@ -58,7 +58,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
     @LmlActor("keyJump") private TextButton keyJump;
     private final Actor keyboardListener = new Actor();
 
-    // Game pad widgets:
+    
     @LmlActor("padUp") private TextButton padUp;
     @LmlActor("padDown") private TextButton padDown;
     @LmlActor("padLeft") private TextButton padLeft;
@@ -72,7 +72,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
     private Array<Controller> controllers;
 
     public ControlsEditController() {
-        // Allows to change current keyboard controls:
+        
         keyboardListener.addListener(new InputListener() {
             @Override
             public boolean keyUp(final InputEvent event, final int keycode) {
@@ -100,7 +100,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
             }
         });
 
-        // Allows to change controller shortcuts:
+        
         controllerListener = new ControllerAdapter() {
             @Override
             public boolean buttonUp(final Controller controller, final int buttonIndex) {
@@ -129,7 +129,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
         };
     }
 
-    /** @param control will be edited by this screen. */
+    
     public void setControl(final Control control) {
         this.control = control;
     }
@@ -145,7 +145,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
     }
 
     private void attachListeners() {
-        // Allowing controls to listen to input:
+        
         final InputMultiplexer inputMultiplexer = new InputMultiplexer();
         control.attachInputListener(inputMultiplexer);
         control.setControlListener(new ControlListener() {
@@ -176,7 +176,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
             invertXButton.setChecked(gamePadControl.isInvertX());
             invertYButton.setChecked(gamePadControl.isInvertY());
             invertXYButton.setChecked(gamePadControl.isInvertXY());
-            // Allowing the player to choose controller device:
+            
             controllersSelect.getItems().clear();
             controllersSelect.getSelection().setMultiple(false);
             controllersSelect.getSelection().setRequired(true);
@@ -194,7 +194,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
 
     private void changeView() {
         mainTable.clearChildren();
-        // Finding view relevant to the controls:
+        
         final Actor view = views.get(control.getType().name());
         mainTable.add(view).grow();
         mainTable.pack();
@@ -269,9 +269,9 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
         ((GamePadControl) control).setInvertXY(button.isChecked());
     }
 
-    /** Updates position of mock up entity. */
+    
     private class MockUpdateAction extends Action {
-        private final FloatRange x = new FloatRange(0f, 0.2f); // 0.2 is transition length (smoothness).
+        private final FloatRange x = new FloatRange(0f, 0.2f); 
         private final FloatRange y = new FloatRange(0f, 0.2f);
         private float parentSize;
         private float size;
@@ -300,7 +300,7 @@ public class ControlsEditController implements ActionContainer, ViewDialogShower
             return false;
         }
 
-        // X and Y are in range of [-1, 1] - converting to [0, 1].
+        
         private float getX() {
             return (control.getMovementDirection().x + 1f) / 2f;
         }

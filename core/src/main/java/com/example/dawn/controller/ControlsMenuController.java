@@ -14,7 +14,7 @@ public class ControlsMenuController extends Controller {
     private final DatabaseManager databaseManager;
     private PlayerControlsService playerControlsService;
     
-    // Default controls
+    
     public static final int DEFAULT_MOVE_UP = Input.Keys.W;
     public static final int DEFAULT_MOVE_DOWN = Input.Keys.S;
     public static final int DEFAULT_MOVE_LEFT = Input.Keys.A;
@@ -25,7 +25,7 @@ public class ControlsMenuController extends Controller {
     
     public ControlsMenuController(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
-        // Try to get the service - might be null if not in game context
+        
         try {
             this.playerControlsService = Dawn.getInstance().getPlayerControlsService();
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class ControlsMenuController extends Controller {
     public void saveControls(int moveUp, int moveDown, int moveLeft, int moveRight, int reload, int shoot, int sprint) {
         Player player = App.getInstance().getPlayer();
         if (player != null) {
-            // Save controls to player model
+            
             player.setMoveUpKey(moveUp);
             player.setMoveDownKey(moveDown);
             player.setMoveLeftKey(moveLeft);
@@ -56,10 +56,10 @@ public class ControlsMenuController extends Controller {
             player.setShootKey(shoot);
             player.setSprintKey(sprint);
             
-            // Save to database
+            
             databaseManager.savePlayer(player);
             
-            // Update all active keyboard controls to use the new settings
+            
             if (playerControlsService != null) {
                 playerControlsService.updateAllKeyboardControls();
             }
@@ -75,7 +75,7 @@ public class ControlsMenuController extends Controller {
         return databaseManager;
     }
     
-    // Getters for current controls (reading from player model now)
+    
     public int getMoveUp() { 
         Player player = App.getInstance().getPlayer();
         return player != null && player.getMoveUpKey() != null ? player.getMoveUpKey() : DEFAULT_MOVE_UP;

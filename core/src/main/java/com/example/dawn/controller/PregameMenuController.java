@@ -15,18 +15,18 @@ public class PregameMenuController extends Controller {
     private final DatabaseManager databaseManager;
     private Character selectedCharacter;
     private Weapon selectedWeapon;
-    private int selectedGameDuration; // in minutes
+    private int selectedGameDuration; 
 
     public PregameMenuController(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
-        // Set default selections
+        
         if (!databaseManager.getCharacters().isEmpty()) {
             this.selectedCharacter = databaseManager.getCharacters().get(0);
         }
         if (!databaseManager.getWeapons().isEmpty()) {
             this.selectedWeapon = databaseManager.getWeapons().get(0);
         }
-        this.selectedGameDuration = 5; // default to 5 minutes
+        this.selectedGameDuration = 5; 
     }
 
     public ArrayList<Character> getCharacters() {
@@ -62,15 +62,15 @@ public class PregameMenuController extends Controller {
     }
 
     public void startGame() {
-        // Check if player is logged in
+        
         if (App.getInstance().getPlayer() == null) {
             System.out.println("Error: No player logged in!");
             return;
         }
         
-        // Update player's character and weapon before starting the game
+        
         if (selectedCharacter != null) {
-            // Reset character for new game (HP, abilities, bonuses)
+            
             selectedCharacter.resetForNewGame();
             App.getInstance().getPlayer().setCharacter(selectedCharacter);
         }
@@ -78,10 +78,10 @@ public class PregameMenuController extends Controller {
             App.getInstance().getPlayer().getCharacter().setWeapon(selectedWeapon);
         }
         
-        // Save the updated player data
+        
         databaseManager.savePlayer(App.getInstance().getPlayer());
         
-        // Start the actual game with the new GameScreen
+        
         GameScreenController gameController = new GameScreenController(databaseManager, selectedGameDuration);
         GameScreen gameScreen = new GameScreen(gameController);
         Dawn.getInstance().setScreen(gameScreen);

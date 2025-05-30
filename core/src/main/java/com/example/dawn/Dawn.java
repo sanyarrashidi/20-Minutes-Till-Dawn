@@ -9,10 +9,8 @@ import com.example.dawn.service.EnhancedMusicService;
 import com.example.dawn.service.PlayerControlsService;
 import com.example.dawn.view.SignUpMenu;
 
-/** This class serves only as the application scanning root. Any classes in its package (or any of the sub-packages)
- * with proper Autumn MVC annotations will be found, scanned and initiated. */
 public class Dawn extends Game {
-    /** Default application size. */
+    
     public static final int WIDTH = 450, HEIGHT = 600;
     private static Dawn dawn;
     private static SpriteBatch batch;
@@ -27,11 +25,11 @@ public class Dawn extends Game {
         batch = new SpriteBatch();
         databaseManager = new DatabaseManager();
         
-        // Initialize the music service
+        
         enhancedMusicService = new EnhancedMusicService();
         enhancedMusicService.initialize();
         
-        // Initialize the player controls service
+        
         playerControlsService = new PlayerControlsService();
         
         dawn.setScreen(new SignUpMenu(new SignUpMenuController(databaseManager, enhancedMusicService), GameAssetManager.getInstance().getSkin()));

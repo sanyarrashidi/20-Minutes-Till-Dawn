@@ -4,7 +4,7 @@ public class ActiveAbility {
     private Ability ability;
     private float remainingTime;
     
-    // No-arg constructor for JSON serialization
+    
     public ActiveAbility() {
     }
     

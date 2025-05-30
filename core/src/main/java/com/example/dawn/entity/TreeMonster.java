@@ -10,10 +10,10 @@ import com.example.dawn.models.App;
 import com.example.dawn.models.Player;
 
 public class TreeMonster extends Enemy {
-    private static final int TREE_MONSTER_HP = Integer.MAX_VALUE; // Unlimited HP
-    private static final float TREE_MONSTER_SIZE = 128f; // Larger trees (2x original size)
+    private static final int TREE_MONSTER_HP = Integer.MAX_VALUE; 
+    private static final float TREE_MONSTER_SIZE = 128f; 
     private static final int DAMAGE_TO_PLAYER = 1;
-    private static final float DAMAGE_COOLDOWN = 1.0f; // 1 second cooldown between damage
+    private static final float DAMAGE_COOLDOWN = 1.0f; 
     
     private float lastDamageTime = 0f;
     
@@ -26,7 +26,7 @@ public class TreeMonster extends Enemy {
         Array<TextureRegion> frames = new Array<>();
         
         try {
-            // Load tree monster animation frames
+            
             for (int i = 0; i < 3; i++) {
                 String texturePath = "enemies/T_TreeMonster_" + i + ".png";
                 Texture texture = new Texture(Gdx.files.internal(texturePath));
@@ -34,13 +34,13 @@ public class TreeMonster extends Enemy {
                 System.out.println("Loaded tree monster texture: " + texturePath);
             }
             
-            // Create animation with slower frame rate for tree (they don't move much)
+            
             animation = new Animation<>(0.5f, frames, Animation.PlayMode.LOOP);
             System.out.println("Created tree monster animation with " + frames.size + " frames");
             
         } catch (Exception e) {
             System.out.println("Failed to load tree monster textures: " + e.getMessage());
-            // Create fallback animation
+            
             frames.clear();
             frames.add(new TextureRegion(new Texture(Gdx.files.internal("textures/T_TileGrass.png"))));
             animation = new Animation<>(1f, frames, Animation.PlayMode.LOOP);
@@ -49,10 +49,10 @@ public class TreeMonster extends Enemy {
     
     @Override
     public void update(float delta) {
-        // Tree monsters are stationary, just update animation
+        
         animationTime += delta;
         
-        // Update damage cooldown
+        
         if (lastDamageTime > 0) {
             lastDamageTime -= delta;
             if (lastDamageTime < 0) {
@@ -74,7 +74,7 @@ public class TreeMonster extends Enemy {
     
     @Override
     public void onPlayerCollision() {
-        // Only damage player if cooldown has expired
+        
         if (lastDamageTime <= 0) {
             Player player = App.getInstance().getPlayer();
             if (player != null && player.getCharacter() != null) {
@@ -84,13 +84,13 @@ public class TreeMonster extends Enemy {
                 
                 System.out.println("Tree monster damaged player! HP: " + currentHp + " -> " + newHp);
                 
-                // Start damage cooldown
+                
                 lastDamageTime = DAMAGE_COOLDOWN;
                 
-                // Check if player died
+                
                 if (newHp <= 0) {
                     System.out.println("Player died from tree monster damage!");
-                    // TODO: Handle player death
+                    
                 }
             }
         }
@@ -98,8 +98,8 @@ public class TreeMonster extends Enemy {
     
     @Override
     public void takeDamage(int damage) {
-        // Tree monsters have unlimited HP and cannot be killed
-        // Do nothing when taking damage
+        
+        
         System.out.println("Tree monster hit but cannot be killed!");
     }
 } 

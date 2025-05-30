@@ -7,16 +7,16 @@ import com.example.dawn.configuration.preferences.ControlsData;
 import com.example.dawn.service.controls.AbstractButtonControl;
 import com.example.dawn.service.controls.ControlType;
 
-/** Allows to control an entity with controller events. */
+
 public class GamePadControl extends AbstractButtonControl {
     private static final float DEADZONE = 0.2f;
-    /** Axis alignment. */
+    
     protected static final int X_LEFT = 0, X_RIGHT = 3, Y_LEFT = 1, Y_RIGHT = 2;
-    /** Left becomes right. */
+    
     private boolean invertX;
-    /** Up becomes down. */
+    
     private boolean invertY;
-    /** Left becomes up. */
+    
     private boolean invertXY;
 
     protected float axisX;
@@ -62,23 +62,23 @@ public class GamePadControl extends AbstractButtonControl {
             return false;
         }
 
-// This might be needed if using an older gdx-controllers version. The povMoved() method is not present in
-// the current version of gdx-controllers, and there isn't an immediately-clear replacement.
-//        @Override
-//        public boolean povMoved(final Controller controller, final int povIndex, final PovDirection direction) {
-//            if (isAssignedTo(controller)) {
-//                if (direction != null) {
-//                    if (direction == PovDirection.center) {
-//                        stop();
-//                    } else {
-//                        movement.x = getX(direction);
-//                        movement.y = getY(direction);
-//                    }
-//                }
-//                return true;
-//            }
-//            return false;
-//        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     };
 
     public GamePadControl() {
@@ -89,18 +89,18 @@ public class GamePadControl extends AbstractButtonControl {
         jump = 4;
     }
 
-    /** @param controller will be used to control the entity. */
+    
     public GamePadControl(final Controller controller) {
         this();
         this.controller = controller;
     }
 
-    /** @return the device that this input processor is assigned to. */
+    
     public Controller getController() {
         return controller;
     }
 
-    /** @param controller will be used to control the entity. */
+    
     public void setController(final Controller controller) {
         if (this.controller != null) {
             this.controller.removeListener(controllerListener);
@@ -111,14 +111,12 @@ public class GamePadControl extends AbstractButtonControl {
         }
     }
 
-    /** @param controller a {@link Controller} instance. Can be null.
-     * @return true if this input processor is assigned to passed controller. */
     public boolean isAssignedTo(final Controller controller) {
         return this.controller.equals(controller);
     }
 
     protected void updateAxisValue(final int axisIndex, float value) {
-        if (isY(axisIndex)) { // Inverting Y coordinates.
+        if (isY(axisIndex)) { 
             value = -value;
         }
         if (!invertXY && isX(axisIndex) || invertXY && isY(axisIndex)) {
@@ -142,61 +140,61 @@ public class GamePadControl extends AbstractButtonControl {
 
     }
 
-// This might be needed if using an older gdx-controllers version. PovDirection is not present in
-// the current version of gdx-controllers, and this code is only used by povMoved(), which is also
-// commented out.
-//    protected float getX(final PovDirection direction) {
-//        final float x;
-//        if (invertXY) { // Checking Y axis (north=east, south=west):
-//            x = getAbsoluteY(direction);
-//        } else { // Checking X axis:
-//            x = getAbsoluteX(direction);
-//        }
-//        if (invertX) {
-//            return -x;
-//        }
-//        return x;
-//    }
-//
-//    protected float getY(final PovDirection direction) {
-//        final float y;
-//        if (invertXY) { // Checking X axis (north=east, south=west):
-//            y = getAbsoluteX(direction);
-//        } else { // Checking Y axis:
-//            y = getAbsoluteY(direction);
-//        }
-//        if (invertY) {
-//            return -y;
-//        }
-//        return y;
-//    }
-//
-//    protected float getAbsoluteX(final PovDirection direction) {
-//        if (direction == PovDirection.east) {
-//            return 1f;
-//        } else if (direction == PovDirection.northEast || direction == PovDirection.southEast) {
-//            return COS;
-//        } else if (direction == PovDirection.west) {
-//            return -1f;
-//        } else if (direction == PovDirection.northWest || direction == PovDirection.southWest) {
-//            return -COS;
-//        }
-//        return 0f;
-//    }
-//
-//    protected float getAbsoluteY(final PovDirection direction) {
-//        if (direction == PovDirection.north) {
-//            return 1f;
-//        } else if (direction == PovDirection.northEast || direction == PovDirection.northWest) {
-//            return SIN;
-//        } else if (direction == PovDirection.south) {
-//            return -1f;
-//        } else if (direction == PovDirection.southWest || direction == PovDirection.southEast) {
-//            return -SIN;
-//        } else {
-//            return 0f;
-//        }
-//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private static boolean isX(final int axisIndex) {
         return axisIndex == X_LEFT || axisIndex == X_RIGHT;
@@ -210,39 +208,39 @@ public class GamePadControl extends AbstractButtonControl {
         return MathUtils.atan2(axisY, axisX) * MathUtils.radiansToDegrees;
     }
 
-    /** @return true if X movement is inverted. */
+    
     public boolean isInvertX() {
         return invertX;
     }
 
-    /** @param invertX true to invert X movement. */
+    
     public void setInvertX(final boolean invertX) {
         this.invertX = invertX;
     }
 
-    /** @return true if Y movement is inverted. */
+    
     public boolean isInvertY() {
         return invertY;
     }
 
-    /** @param invertY true to invert Y movement. */
+    
     public void setInvertY(final boolean invertY) {
         this.invertY = invertY;
     }
 
-    /** @return true if X and Y movement are inverted with each other. */
+    
     public boolean isInvertXY() {
         return invertXY;
     }
 
-    /** @param invertXY true to invert X and Y movement with each other. */
+    
     public void setInvertXY(final boolean invertXY) {
         this.invertXY = invertXY;
     }
 
     @Override
     public void attachInputListener(final InputMultiplexer inputMultiplexer) {
-        controller.removeListener(controllerListener); // Making sure listener is not added twice.
+        controller.removeListener(controllerListener); 
         controller.addListener(controllerListener);
     }
 

@@ -12,7 +12,7 @@ import com.example.dawn.configuration.preferences.ControlsData;
 import com.example.dawn.configuration.preferences.ControlsPreference;
 import com.example.dawn.service.controls.Control;
 
-/** Manages players' controls. */
+
 @Component
 public class ControlsService {
     @Inject private ControlsPreference preference;
@@ -36,25 +36,19 @@ public class ControlsService {
         preference.set(controlsData);
     }
 
-    /** @param playerId ID of the player to check.
-     * @return true if the player ID is valid and the player has an active controller attached. */
     public boolean isActive(final int playerId) {
         return GdxArrays.isIndexValid(controls, playerId) && controls.get(playerId).isActive();
     }
 
-    /** @param playerId ID of the player.
-     * @return controller assigned to the player. */
     public Control getControl(final int playerId) {
         return controls.get(playerId);
     }
 
-    /** @param playerId ID of the player.
-     * @param control will be assigned to the selected player. */
     public void setControl(final int playerId, final Control control) {
         controls.set(playerId, control);
     }
 
-    /** @return controllers assigned to all players. Order matches players' IDs. */
+    
     public Array<Control> getControls() {
         return controls;
     }
